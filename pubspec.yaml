@@ -12,8 +12,11 @@ dependencies:
   # Filcnaplo main dep
   filcnaplo:
     path: ../filcnaplo/
+  filcnaplo_mobile_ui:
+    path: "../filcnaplo_mobile_ui/"
 
   provider: ^5.0.0
+  flutter_feather_icons: ^2.0.0+1
 
 dev_dependencies:
   flutter_lints: ^1.0.0
