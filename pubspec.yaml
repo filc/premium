@@ -1,0 +1,22 @@
+name: filcnaplo_premium
+publish_to: "none"
+
+environment:
+  sdk: ">=2.16.0-80.1.beta <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+
+  # Filcnaplo main dep
+  filcnaplo:
+    path: ../filcnaplo/
+
+  provider: ^5.0.0
+
+dev_dependencies:
+  flutter_lints: ^1.0.0
+
+flutter:
+  uses-material-design: true
