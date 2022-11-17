@@ -12,6 +12,8 @@ dependencies:
   # Filcnaplo main dep
   filcnaplo:
     path: ../filcnaplo/
+  filcnaplo_kreta_api:
+    path: ../filcnaplo_kreta_api/
   filcnaplo_mobile_ui:
     path: "../filcnaplo_mobile_ui/"
 
