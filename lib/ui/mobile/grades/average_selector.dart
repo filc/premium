@@ -1,8 +1,11 @@
 import 'package:filcnaplo/theme/colors/colors.dart';
+import 'package:filcnaplo_premium/models/premium_scopes.dart';
+import 'package:filcnaplo_premium/providers/premium_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:filcnaplo_mobile_ui/pages/grades/grades_page.i18n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
+import 'package:provider/provider.dart';
 
 final List<List<dynamic>> avgDropItems = [
   ["annual_average".i18n, 0],
@@ -20,6 +23,10 @@ class PremiumAverageSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.gradeStats)) {
+      return Text("annual_average".i18n);
+    }
+
     return DropdownButton2(
       items: avgDropItems
           .map((item) => DropdownMenuItem<String>(
