@@ -29,7 +29,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   }
 
   void setTheme(mode) {
-    settings.update(context, theme: mode);
+    settings.update(theme: mode);
     Provider.of<ThemeModeObserver>(context, listen: false).changeTheme(mode);
   }
 
@@ -48,14 +48,14 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   void updateCustomColor(Color v) {
     switch (colorMode) {
       case CustomColorMode.background:
-        settings.update(context, customBackgroundColor: v);
+        settings.update(customBackgroundColor: v);
         break;
       case CustomColorMode.highlight:
-        settings.update(context, customHighlightColor: v);
+        settings.update(customHighlightColor: v);
         break;
       case CustomColorMode.accent:
       default:
-        settings.update(context, customAccentColor: v);
+        settings.update(customAccentColor: v);
         break;
     }
   }
@@ -128,9 +128,9 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                 // MARK PREMIUM
                 setState(() {
                   if (v) {
-                    settings.update(context, accentColor: AccentColor.adaptive);
+                    settings.update(accentColor: AccentColor.adaptive);
                   } else {
-                    settings.update(context, accentColor: AccentColor.filc);
+                    settings.update(accentColor: AccentColor.filc);
                   }
                   setTheme(settings.theme);
                 });
@@ -152,7 +152,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                         type: MaterialType.transparency,
                         child: InkWell(
                           onTap: () {
-                            settings.update(context, accentColor: AccentColor.values[index]);
+                            settings.update(accentColor: AccentColor.values[index]);
                             setState(() {
                               customColorMenu = true;
                             });
@@ -193,7 +193,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                       color: accentColorMap[AccentColor.values[index]],
                       child: InkWell(
                         onTap: () {
-                          settings.update(context, accentColor: AccentColor.values[index]);
+                          settings.update(accentColor: AccentColor.values[index]);
                           setTheme(settings.theme);
                           Navigator.of(context).maybePop();
                         },

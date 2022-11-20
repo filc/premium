@@ -19,6 +19,8 @@ dependencies:
 
   provider: ^5.0.0
   flutter_feather_icons: ^2.0.0+1
+  uni_links: ^0.5.1
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_lints: ^1.0.0
