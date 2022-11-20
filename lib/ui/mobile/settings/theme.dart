@@ -1,6 +1,8 @@
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo/theme/colors/accent.dart';
 import 'package:filcnaplo/theme/observer.dart';
+import 'package:filcnaplo_premium/models/premium_scopes.dart';
+import 'package:filcnaplo_premium/providers/premium_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
@@ -144,7 +146,10 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                 }
 
                 if (AccentColor.values[index] == AccentColor.custom) {
-                  // MARK PREMIUM
+                  if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.customColors)) {
+                    return const SizedBox(); // TODO: premium upsell
+                  }
+
                   return Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: ClipOval(

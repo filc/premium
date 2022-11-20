@@ -1,6 +1,8 @@
 import 'package:filcnaplo/api/providers/database_provider.dart';
 import 'package:filcnaplo/api/providers/user_provider.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_sheet_menu/bottom_sheet_menu_item.dart';
+import 'package:filcnaplo_premium/models/premium_scopes.dart';
+import 'package:filcnaplo_premium/providers/premium_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/settings_screen.i18n.dart';
@@ -11,6 +13,10 @@ class UserMenuNickname extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.nickname)) {
+      return const SizedBox(); // TODO: premium upsell
+    }
+
     return BottomSheetMenuItem(
       onPressed: () {
         showDialog(context: context, builder: (context) => const UserNicknameEditor());
