@@ -64,7 +64,27 @@ class _PremiumBannerButtonState extends State<PremiumBannerButton> with SingleTi
                 child: InkWell(
                   borderRadius: BorderRadius.circular(14.0),
                   onTap: () {
-                    Provider.of<PremiumProvider>(context, listen: false).auth.initAuth();
+                    premium.auth.initAuth();
+                    showDialog(
+                      context: context,
+                      useRootNavigator: true,
+                      builder: (context) {
+                        final premium = Provider.of<PremiumProvider>(context);
+
+                        if (premium.hasPremium) {
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                            Navigator.of(context, rootNavigator: true).maybePop();
+                          });
+                        }
+
+                        return AlertDialog(
+                          title: const Text("Premium auth token"),
+                          content: TextField(
+                            onSubmitted: (token) => premium.auth.finishAuth(token),
+                          ),
+                        );
+                      },
+                    );
                   },
                   child: const SizedBox(
                     height: double.infinity,
