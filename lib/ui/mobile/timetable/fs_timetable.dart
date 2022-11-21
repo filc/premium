@@ -39,6 +39,9 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
     final days = widget.controller.days!;
     final int maxLessonCount = days.fold(0, (a, b) => math.max(a, b.where((l) => l.subject.id != "" || l.isEmpty).length));
 
+    const padding = 30 + 6 * 2;
+    final colw = (MediaQuery.of(context).size.width - padding) / days.length;
+
     return Scaffold(
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 24.0),
@@ -71,13 +74,13 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
             final lessons = days[dayIndex].where((l) => l.subject.id != "" || l.isEmpty).toList();
 
             if (dayIndex >= days.length || lessonIndex >= lessons.length) {
-              columns.add(const SizedBox(width: 160));
+              columns.add(SizedBox(width: colw));
               continue;
             }
 
             if (lessonIndex == -1 && dayIndex >= 0) {
               columns.add(SizedBox(
-                width: 160,
+                width: colw,
                 height: 40.0,
                 child: Text(
                   DateFormat("EEEE", I18n.of(context).locale.languageCode).format(lessons.first.date).capital(),
@@ -89,7 +92,7 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
 
             if (lessons[lessonIndex].isEmpty) {
               columns.add(SizedBox(
-                width: 160,
+                width: colw,
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -106,7 +109,7 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
             }
 
             columns.add(SizedBox(
-              width: 160,
+              width: colw,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
