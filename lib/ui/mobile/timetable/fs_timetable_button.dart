@@ -1,3 +1,4 @@
+import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo_kreta_api/controllers/timetable_controller.dart';
 import 'package:filcnaplo_mobile_ui/common/system_chrome.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
@@ -35,7 +36,7 @@ class PremiumFSTimetableButton extends StatelessWidget {
             setSystemChrome(context);
           });
         },
-        icon: const Icon(FeatherIcons.trello),
+        icon: Icon(FeatherIcons.trello, color: AppColors.of(context).text),
       ),
     );
   }
