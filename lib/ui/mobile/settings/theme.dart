@@ -1,5 +1,6 @@
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo/theme/colors/accent.dart';
+import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo/theme/observer.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:filcnaplo_premium/providers/premium_provider.dart';
@@ -23,6 +24,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   bool colorSelection = false;
   bool customColorMenu = false;
   CustomColorMode? colorMode;
+  final customColorInput = TextEditingController();
 
   @override
   void initState() {
@@ -48,6 +50,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   }
 
   void updateCustomColor(Color v) {
+    settings.update(accentColor: AccentColor.custom);
     switch (colorMode) {
       case CustomColorMode.background:
         settings.update(customBackgroundColor: v);
@@ -65,51 +68,84 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   @override
   Widget build(BuildContext context) {
     if (colorSelection && colorMode != null) {
-      return MaterialColorPicker(
-        selectedColor: getCustomColor(),
-        onColorChange: (v) {
-          setState(() {
-            updateCustomColor(v);
-          });
-          setTheme(settings.theme);
-        },
-        allowShades: true,
-        elevation: 0,
-        physics: const NeverScrollableScrollPhysics(),
-        onBack: () {
-          setTheme(settings.theme);
-          Navigator.of(context).maybePop();
-        },
+      return Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: TextField(
+              controller: customColorInput,
+              decoration: InputDecoration(
+                hintText: "#aabbcc",
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.check),
+                  onPressed: () {
+                    final color = Color(int.parse("ff" + customColorInput.text.replaceAll("#", "").substring(0, 6), radix: 16));
+                    setState(() {
+                      updateCustomColor(color);
+                    });
+                    setTheme(settings.theme);
+                  },
+                ),
+              ),
+            ),
+          ),
+          MaterialColorPicker(
+            selectedColor: getCustomColor(),
+            onColorChange: (v) {
+              setState(() {
+                updateCustomColor(v);
+              });
+              setTheme(settings.theme);
+            },
+            allowShades: true,
+            onlyShadeSelection: true,
+            elevation: 0,
+            physics: const NeverScrollableScrollPhysics(),
+            onBack: () {
+              setTheme(settings.theme);
+              Navigator.of(context).maybePop();
+            },
+          ),
+        ],
       );
     }
 
+    String convertHex(Color? color) => color != null ? "#${(color.value - 0xff000000).toRadixString(16).padLeft(6, '0')}" : "#000000";
+
     if (customColorMenu) {
       return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextButton(
-            child: Text("Accent Color".i18n),
-            onPressed: () {
+          PremiumColorPickerItem(
+            label: "Accent Color".i18n,
+            color: Theme.of(context).colorScheme.secondary,
+            onTap: () {
               setState(() {
                 colorSelection = true;
-                colorMode = colorMode = CustomColorMode.accent;
+                colorMode = CustomColorMode.accent;
+                customColorInput.text = convertHex(settings.customAccentColor);
               });
             },
           ),
-          TextButton(
-            child: Text("Background Color".i18n),
-            onPressed: () {
+          PremiumColorPickerItem(
+            label: "Background Color".i18n,
+            color: Theme.of(context).scaffoldBackgroundColor,
+            onTap: () {
               setState(() {
                 colorSelection = true;
-                colorMode = colorMode = CustomColorMode.background;
+                colorMode = CustomColorMode.background;
+                customColorInput.text = convertHex(settings.customBackgroundColor);
               });
             },
           ),
-          TextButton(
-            child: Text("Highlight Color".i18n),
-            onPressed: () {
+          PremiumColorPickerItem(
+            label: "Highlight Color".i18n,
+            color: Theme.of(context).backgroundColor,
+            onTap: () {
               setState(() {
                 colorSelection = true;
-                colorMode = colorMode = CustomColorMode.highlight;
+                colorMode = CustomColorMode.highlight;
+                customColorInput.text = convertHex(settings.customHighlightColor);
               });
             },
           ),
@@ -157,7 +193,6 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                         type: MaterialType.transparency,
                         child: InkWell(
                           onTap: () {
-                            settings.update(accentColor: AccentColor.values[index]);
                             setState(() {
                               customColorMenu = true;
                             });
@@ -220,6 +255,43 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class PremiumColorPickerItem extends StatelessWidget {
+  const PremiumColorPickerItem({Key? key, required this.label, this.onTap, required this.color}) : super(key: key);
+
+  final String label;
+  final void Function()? onTap;
+  final Color color;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      type: MaterialType.transparency,
+      child: InkWell(
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w500),
+                ),
+              ),
+              Container(
+                width: 30,
+                height: 30,
+                decoration: BoxDecoration(color: color, shape: BoxShape.circle, border: Border.all()),
+              ),
+            ],
+          ),
+        ),
+        onTap: onTap,
       ),
     );
   }
