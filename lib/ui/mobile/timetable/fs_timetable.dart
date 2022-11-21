@@ -1,6 +1,8 @@
 import 'package:filcnaplo/helpers/subject.dart';
 import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo_kreta_api/controllers/timetable_controller.dart';
+import 'package:filcnaplo_mobile_ui/common/empty.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -36,44 +38,56 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.controller.days == null || widget.controller.days!.isEmpty) {
+      return const Center(child: Empty());
+    }
+
     final days = widget.controller.days!;
+    final everyLesson = days.expand((x) => x).toList();
+    everyLesson.sort((a, b) => a.start.compareTo(b.start));
+
     final int maxLessonCount = days.fold(0, (a, b) => math.max(a, b.where((l) => l.subject.id != "" || l.isEmpty).length));
 
-    const padding = 30 + 6 * 2;
+    final int minIndex = int.tryParse(everyLesson.first.lessonIndex) ?? 0;
+    final int maxIndex = int.tryParse(everyLesson.last.lessonIndex) ?? maxLessonCount;
+
+    const prefixw = 40;
+    const padding = prefixw + 6 * 2;
     final colw = (MediaQuery.of(context).size.width - padding) / days.length;
 
     return Scaffold(
       body: ListView.builder(
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 24.0),
-        itemCount: maxLessonCount + 1,
+        itemCount: maxIndex + 1,
         itemBuilder: (context, index) {
           List<Widget> columns = [];
 
           for (int dayIndex = -1; dayIndex < days.length; dayIndex++) {
+            final dayOffset = dayIndex == -1 ? 0 : (int.tryParse(days[dayIndex].first.lessonIndex) ?? 0) - minIndex;
             final lessonIndex = index - 1;
 
             if (dayIndex == -1) {
               if (lessonIndex >= 0) {
                 columns.add(SizedBox(
-                  width: 30.0,
+                  width: prefixw.toDouble(),
                   height: 40.0,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8.0),
                     child: Text(
-                      "$lessonIndex.",
+                      "${minIndex + lessonIndex}.",
                       style: TextStyle(fontWeight: FontWeight.bold, color: Theme.of(context).colorScheme.secondary),
                     ),
                   ),
                 ));
               } else {
-                columns.add(const SizedBox(width: 30.0));
+                columns.add(SizedBox(width: prefixw.toDouble()));
               }
               continue;
             }
 
             final lessons = days[dayIndex].where((l) => l.subject.id != "" || l.isEmpty).toList();
 
-            if (dayIndex >= days.length || lessonIndex >= lessons.length) {
+            if (dayIndex >= days.length || (lessonIndex + dayOffset) >= lessons.length) {
               columns.add(SizedBox(width: colw));
               continue;
             }
@@ -108,6 +122,11 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
               continue;
             }
 
+            if (dayOffset > 0 && lessonIndex < dayOffset) {
+              columns.add(SizedBox(width: colw));
+              continue;
+            }
+
             columns.add(SizedBox(
               width: colw,
               child: Column(
@@ -117,18 +136,18 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
                   Row(
                     children: [
                       Icon(
-                        SubjectIcon.resolveVariant(context: context, subject: lessons[lessonIndex].subject),
+                        SubjectIcon.resolveVariant(context: context, subject: lessons[lessonIndex - dayOffset].subject),
                         size: 18.0,
                         color: AppColors.of(context).text.withOpacity(.7),
                       ),
                       const SizedBox(width: 8.0),
-                      Text(lessons[lessonIndex].name.capital()),
+                      Text(lessons[lessonIndex - dayOffset].name.capital()),
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 26.0),
                     child: Text(
-                      lessons[lessonIndex].room,
+                      lessons[lessonIndex - dayOffset].room,
                       style: TextStyle(color: AppColors.of(context).text.withOpacity(.5)),
                     ),
                   ),
