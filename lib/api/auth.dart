@@ -60,11 +60,11 @@ class PremiumAuth {
       return;
     }
 
-    final res = await http.post(Uri.parse(FilcAPI.premiumApi), body: {
-      "access_token": _settings.premiumAccessToken,
-    });
-
     try {
+      final res = await http.post(Uri.parse(FilcAPI.premiumApi), body: {
+        "access_token": _settings.premiumAccessToken,
+      });
+
       final premium = PremiumResult.fromJson(jsonDecode(res.body) as Map);
       // Activation succeeded
       log("[INFO] Premium activated: ${premium.scopes.join(',')}");
