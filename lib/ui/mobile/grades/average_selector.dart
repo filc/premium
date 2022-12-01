@@ -33,10 +33,10 @@ class PremiumAverageSelector extends StatelessWidget {
                 value: item[0],
                 child: Text(
                   item[0],
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
-                    color: Colors.white,
+                    color: AppColors.of(context).text,
                   ),
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -44,8 +44,8 @@ class PremiumAverageSelector extends StatelessWidget {
           .toList(),
       onChanged: onChanged,
       iconSize: 14,
-      iconEnabledColor: Colors.grey,
-      iconDisabledColor: Colors.grey,
+      iconEnabledColor: AppColors.of(context).text,
+      iconDisabledColor: AppColors.of(context).text,
       underline: const SizedBox(),
       itemHeight: 40,
       itemPadding: const EdgeInsets.only(left: 14, right: 14),
@@ -75,10 +75,10 @@ class PremiumAverageSelector extends StatelessWidget {
             const SizedBox(
               width: 4,
             ),
-            const Icon(
+            Icon(
               FeatherIcons.chevronDown,
               size: 16,
-              color: Colors.white,
+              color: AppColors.of(context).text,
             ),
           ],
         ),
