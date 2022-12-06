@@ -10,9 +10,6 @@ import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.RemoteViewsService;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
-
 import org.joda.time.DateTime;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -148,8 +145,8 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
         return day_subjects.size();
     }
 
-    public void setLayout(@NonNull final RemoteViews view) {
-        /* Visiblities */
+    public void setLayout(final RemoteViews view) {
+        /* Visibilities */
         view.setViewVisibility(R.id.tt_item_num, witem.NumVisibility);
         view.setViewVisibility(R.id.tt_item_name, witem.NameVisibility);
         view.setViewVisibility(R.id.tt_item_name_nodesc, witem.NameNodescVisibility);
@@ -265,6 +262,11 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
         lessonIndexes.clear();
 
         try {
+            List<JSONArray> arr = WidgetTimetable.genJsonDays(context);
+
+            if(arr.isEmpty()) {
+                return;
+            }
             JSONArray arr_lessons = WidgetTimetable.genJsonDays(context).get(rday);
 
             for (int i = 0; i < arr_lessons.length(); i++) {

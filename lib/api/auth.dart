@@ -5,9 +5,11 @@ import 'dart:developer';
 import 'package:filcnaplo/api/client.dart';
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo_premium/models/premium_result.dart';
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uni_links/uni_links.dart';
 import 'package:http/http.dart' as http;
+import 'package:home_widget/home_widget.dart';
 
 class PremiumAuth {
   final SettingsProvider _settings;
@@ -46,12 +48,24 @@ class PremiumAuth {
       final scopes = ((jsonDecode(res.body) as Map)["scopes"] as List).cast<String>();
       log("[INFO] Premium auth finish: ${scopes.join(',')}");
       await _settings.update(premiumAccessToken: accessToken, premiumScopes: scopes);
+      updateWidget();
       return;
     } catch (err, sta) {
       log("[ERROR] Premium auth failed: $err\n$sta");
     }
 
     await _settings.update(premiumAccessToken: "", premiumScopes: []);
+    updateWidget();
+  }
+
+  Future<bool?> updateWidget() async {
+    try {
+      print('Updating widget from auth');
+      return HomeWidget.updateWidget(name: 'widget_timetable.WidgetTimetable');
+    } on PlatformException catch (exception) {
+      print('Error Updating Widget After Auth. $exception');
+    }
+    return false;
   }
 
   Future<void> refreshAuth() async {

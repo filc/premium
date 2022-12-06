@@ -11,7 +11,10 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String _ID = "_id";
     public static final String DAY_SEL = "day_sel";
     public static final String TIMETABLE = "timetable";
+    public static final String LAST_ACCOUNT_ID = "last_account_id";
     public static final String THEME = "theme";
+    public static final String PREMIUM_TOKEN = "premium_token";
+    public static final String LOCALE = "language";
     public static final String ACCENT_COLOR = "accent_color";
     public static final String TABLE_NAME_WIDGETS = "widgets";
     public static final String TABLE_NAME_USER_DATA = "user_data";

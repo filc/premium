@@ -10,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import android.view.View;
 import android.widget.RemoteViews;
 import android.widget.Toast;
 
@@ -33,22 +34,24 @@ import es.antonborri.home_widget.HomeWidgetBackgroundIntent;
 import es.antonborri.home_widget.HomeWidgetLaunchIntent;
 import es.antonborri.home_widget.HomeWidgetProvider;
 
-import androidx.annotation.RequiresApi;
-
 public class WidgetTimetable extends HomeWidgetProvider {
 
     private static final String ACTION_WIDGET_CLICK_NAV_LEFT = "list_widget.ACTION_WIDGET_CLICK_NAV_LEFT";
     private static final String ACTION_WIDGET_CLICK_NAV_RIGHT = "list_widget.ACTION_WIDGET_CLICK_NAV_RIGHT";
     private static final String ACTION_WIDGET_CLICK_NAV_TODAY = "list_widget.ACTION_WIDGET_CLICK_NAV_TODAY";
     private static final String ACTION_WIDGET_CLICK_NAV_REFRESH = "list_widget.ACTION_WIDGET_CLICK_NAV_REFRESH";
+    private static final String ACTION_WIDGET_CLICK_BUY_PREMIUM = "list_widget.ACTION_WIDGET_CLICK_BUY_PREMIUM";
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, SharedPreferences widgetData) {
+        Log.d("FILC||", "onUpdate called");
         for (int i = 0; i < appWidgetIds.length; i++) {
             RemoteViews views = generateView(context, appWidgetIds[i]);
 
-            int rday = selectDay(context, appWidgetIds[i], 0, true);
-            views.setTextViewText(R.id.nav_current, convertDayOfWeek(rday));
+            if(premiumEnabled(context) && userLoggedIn(context)) {
+                int rday = selectDay(context, appWidgetIds[i], 0, true);
+                views.setTextViewText(R.id.nav_current, convertDayOfWeek(context, rday));
+            }
 
             pushUpdate(context, views, appWidgetIds[i]);
         }
@@ -68,12 +71,27 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
         RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.widget_timetable);
 
-        views.setOnClickPendingIntent(R.id.nav_to_left, makePending(context, ACTION_WIDGET_CLICK_NAV_LEFT, appId));
-        views.setOnClickPendingIntent(R.id.nav_to_right, makePending(context, ACTION_WIDGET_CLICK_NAV_RIGHT, appId));
-        views.setOnClickPendingIntent(R.id.nav_current, makePending(context, ACTION_WIDGET_CLICK_NAV_TODAY, appId));
-        views.setOnClickPendingIntent(R.id.nav_refresh, makePending(context, ACTION_WIDGET_CLICK_NAV_REFRESH, appId));
-        views.setRemoteAdapter(R.id.widget_list, serviceIntent);
-        views.setEmptyView(R.id.widget_list, R.id.empty_view);
+        views.setViewVisibility(R.id.need_premium, View.GONE);
+        views.setViewVisibility(R.id.need_login, View.GONE);
+        views.setViewVisibility(R.id.tt_grid_cont, View.GONE);
+
+        if(!userLoggedIn(context)) {
+            Log.d("FILC | ", "User was not logged in, showing login widget");
+            views.setViewVisibility(R.id.need_login, View.VISIBLE);
+        } else if(premiumEnabled(context)) {
+            Log.d("FILC | ", "User was logged in and premium");
+            views.setViewVisibility(R.id.tt_grid_cont, View.VISIBLE);
+            views.setOnClickPendingIntent(R.id.nav_to_left, makePending(context, ACTION_WIDGET_CLICK_NAV_LEFT, appId));
+            views.setOnClickPendingIntent(R.id.nav_to_right, makePending(context, ACTION_WIDGET_CLICK_NAV_RIGHT, appId));
+            views.setOnClickPendingIntent(R.id.nav_current, makePending(context, ACTION_WIDGET_CLICK_NAV_TODAY, appId));
+            views.setOnClickPendingIntent(R.id.nav_refresh, makePending(context, ACTION_WIDGET_CLICK_NAV_REFRESH, appId));
+            views.setRemoteAdapter(R.id.widget_list, serviceIntent);
+            views.setEmptyView(R.id.widget_list, R.id.empty_view);
+        } else  {
+            Log.d("FILC | ", "User was logged in but not premium");
+            views.setViewVisibility(R.id.need_premium, View.VISIBLE);
+            views.setOnClickPendingIntent(R.id.buy_premium, makePending(context, ACTION_WIDGET_CLICK_BUY_PREMIUM, appId));
+        }
 
         return views;
     }
@@ -87,47 +105,50 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-
         super.onReceive(context, intent);
-        Integer appId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
-        RemoteViews views = generateView(context, appId);
-
-        Log.d("onReceiveTest", intent.getAction() + ":" + appId);
 
         if(intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_ID)) {
-            Log.d("wid", "has wid: " + appId);
+            int appId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
+            RemoteViews views = generateView(context, appId);
 
             try {
-                if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_LEFT)) {
-                    int rday = selectDay(context, appId, -1, false);
-                    views.setTextViewText(R.id.nav_current, convertDayOfWeek(rday));
+                if(!premiumEnabled(context) && userLoggedIn(context)) {
+                    if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_LEFT)) {
+                        int rday = selectDay(context, appId, -1, false);
+                        views.setTextViewText(R.id.nav_current, convertDayOfWeek(context, rday));
 
-                    pushUpdate(context, views, appId);
-                } else if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_RIGHT)) {
-                    int rday = selectDay(context, appId, 1, false);
-                    views.setTextViewText(R.id.nav_current, convertDayOfWeek(rday));
+                        pushUpdate(context, views, appId);
+                    } else if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_RIGHT)) {
+                        int rday = selectDay(context, appId, 1, false);
+                        views.setTextViewText(R.id.nav_current, convertDayOfWeek(context, rday));
 
-                    pushUpdate(context, views, appId);
-                }else if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_TODAY)) {
-                    int rday = getToday(context);
-                    setSelectedDay(context, appId, rday);
+                        pushUpdate(context, views, appId);
+                    } else if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_TODAY)) {
+                        int rday = getToday(context);
+                        setSelectedDay(context, appId, rday);
 
-                    views.setTextViewText(R.id.nav_current, convertDayOfWeek(rday));
+                        views.setTextViewText(R.id.nav_current, convertDayOfWeek(context, rday));
 
-                    pushUpdate(context, views, appId);
-                } else if(intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_REFRESH)) {
-                  PendingIntent pendingIntent = HomeWidgetLaunchIntent.INSTANCE.getActivity(context, MainActivity.class, Uri.parse("timetable://refresh"));
-                  pendingIntent.send();
-                } else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_DELETED")) {
-                    DBManager dbManager = new DBManager(context.getApplicationContext());
+                        pushUpdate(context, views, appId);
+                    } else if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_REFRESH)) {
+                        PendingIntent pendingIntent = HomeWidgetLaunchIntent.INSTANCE.getActivity(context, MainActivity.class, Uri.parse("timetable://refresh"));
+                        pendingIntent.send();
+                    } else if (intent.getAction().equals("android.appwidget.action.APPWIDGET_DELETED")) {
+                        DBManager dbManager = new DBManager(context.getApplicationContext());
 
-                    try {
-                        dbManager.open();
-                        dbManager.deleteWidget(appId);
-                        dbManager.close();
-                    } catch (Exception e) {
-                        e.printStackTrace();
+                        try {
+                            dbManager.open();
+                            dbManager.deleteWidget(appId);
+                            dbManager.close();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
+                }
+
+                if(intent.getAction().equals(ACTION_WIDGET_CLICK_BUY_PREMIUM)) {
+                    PendingIntent pendingIntent = HomeWidgetLaunchIntent.INSTANCE.getActivity(context, MainActivity.class, Uri.parse("settings://premium"));
+                    pendingIntent.send();
                 }
             }
             catch (Exception e) {
@@ -138,7 +159,7 @@ public class WidgetTimetable extends HomeWidgetProvider {
         }
     }
 
-    public static String convertDayOfWeek(int rday) {
+    public static String convertDayOfWeek(Context context, int rday) {
         Log.d("convertDayOfWeek", ":" + rday);
 
         /*if(rday == -1) return DayOfWeek.of(1).getDisplayName(TextStyle.FULL, new Locale("hu", "HU"));
@@ -148,10 +169,12 @@ public class WidgetTimetable extends HomeWidgetProvider {
         String dayOfWeek = "Unknown";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            if (rday == -1)
-                return DayOfWeek.of(1).getDisplayName(TextStyle.FULL, new Locale("hu", "HU"));
+            Locale loc = getLocale(context);
 
-            dayOfWeek = DayOfWeek.of(rday + 1).getDisplayName(TextStyle.FULL, new Locale("hu", "HU"));
+            if (rday == -1)
+                return DayOfWeek.of(1).getDisplayName(TextStyle.FULL, loc);
+
+            dayOfWeek = DayOfWeek.of(rday + 1).getDisplayName(TextStyle.FULL, loc);
         }
 
         return dayOfWeek.substring(0, 1).toUpperCase() + dayOfWeek.substring(1).toLowerCase();
@@ -230,8 +253,14 @@ public class WidgetTimetable extends HomeWidgetProvider {
         DBManager dbManager = new DBManager(context.getApplicationContext());
         try {
             dbManager.open();
-            JSONArray fecthtt = new JSONArray(dbManager.fetchTimetable().getString(0));
+            Cursor ct = dbManager.fetchTimetable();
             dbManager.close();
+
+            if(ct.getCount() == 0) {
+                return gen_days;
+            }
+
+            JSONArray fecthtt = new JSONArray(ct.getString(0));
 
             JSONArray dayArray = new JSONArray();
             String currday = "";
@@ -270,6 +299,77 @@ public class WidgetTimetable extends HomeWidgetProvider {
             b.insert(0,"0");
         }
         return b.toString();
+    }
+
+    public static Locale getLocale(Context context) {
+        DBManager dbManager = new DBManager(context.getApplicationContext());
+        Log.d("FILC", "checking Locale...");
+
+        try {
+            dbManager.open();
+            String loc = dbManager.fetchLocale().getString(0);
+            dbManager.close();
+
+            if(loc.equals("hu") || loc.equals("de")) {
+                Log.d("FILC", "Locale to " + loc + "_" + loc.toUpperCase());
+                return new Locale(loc, loc.toUpperCase());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d("FILC", "Locale to en_GB");
+
+        return new Locale("en", "GB");
+    }
+
+    public static boolean premiumEnabled(Context context) {
+        DBManager dbManager = new DBManager(context.getApplicationContext());
+        Log.d("FILC", "checking Premium...");
+
+        try {
+            dbManager.open();
+            String premium_token = dbManager.fetchPremiumToken().getString(0);
+            dbManager.close();
+
+            if(!premium_token.equals("")) {
+                Log.d("FILC", "Premium status: true");
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d("FILC", "Premium status: false");
+
+        return false;
+    }
+
+    public static boolean userLoggedIn(Context context) {
+        return !lastUserId(context).equals("");
+    }
+
+    public static String lastUserId(Context context) {
+        DBManager dbManager = new DBManager(context.getApplicationContext());
+        Log.d("FILC", "checking User login state...");
+
+        try {
+            dbManager.open();
+            Cursor cursor = dbManager.fetchLastUser();
+            dbManager.close();
+
+            if(cursor != null && !cursor.getString(0).equals("")) {
+                String last_user = cursor.getString(0);
+                Log.d("FILC", "Login status: true | " + last_user);
+                return last_user;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        Log.d("FILC", "Login status: false");
+
+        return "";
     }
 
     @Override

@@ -44,8 +44,32 @@ public class DBManager {
         return cursor;
     }
 
+    public Cursor fetchLastUser() {
+        Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.LAST_ACCOUNT_ID}, null, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
     public Cursor fetchTheme() {
         Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.THEME, SQLiteHelper.ACCENT_COLOR}, null, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+    public Cursor fetchPremiumToken() {
+        Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.PREMIUM_TOKEN}, null, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
+    public Cursor fetchLocale() {
+        Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.LOCALE}, null, null, null, null, null);
         if (cursor != null) {
             cursor.moveToFirst();
         }
