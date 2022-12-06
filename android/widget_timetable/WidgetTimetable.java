@@ -112,7 +112,7 @@ public class WidgetTimetable extends HomeWidgetProvider {
             RemoteViews views = generateView(context, appId);
 
             try {
-                if(!premiumEnabled(context) && userLoggedIn(context)) {
+                if(premiumEnabled(context) && userLoggedIn(context)) {
                     if (intent.getAction().equals(ACTION_WIDGET_CLICK_NAV_LEFT)) {
                         int rday = selectDay(context, appId, -1, false);
                         views.setTextViewText(R.id.nav_current, convertDayOfWeek(context, rday));
