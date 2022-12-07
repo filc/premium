@@ -78,6 +78,7 @@ public class WidgetTimetable extends HomeWidgetProvider {
         if(!userLoggedIn(context)) {
             Log.d("FILC | ", "User was not logged in, showing login widget");
             views.setViewVisibility(R.id.need_login, View.VISIBLE);
+            views.setOnClickPendingIntent(R.id.open_login, makePending(context, ACTION_WIDGET_CLICK_BUY_PREMIUM, appId));
         } else if(premiumEnabled(context)) {
             Log.d("FILC | ", "User was logged in and premium");
             views.setViewVisibility(R.id.tt_grid_cont, View.VISIBLE);
