@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'package:filcnaplo/api/client.dart';
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo_premium/models/premium_result.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:uni_links/uni_links.dart';
@@ -60,10 +61,11 @@ class PremiumAuth {
 
   Future<bool?> updateWidget() async {
     try {
-      print('Updating widget from auth');
       return HomeWidget.updateWidget(name: 'widget_timetable.WidgetTimetable');
     } on PlatformException catch (exception) {
-      print('Error Updating Widget After Auth. $exception');
+      if (kDebugMode) {
+        print('Error Updating Widget After Auth. $exception');
+      }
     }
     return false;
   }
