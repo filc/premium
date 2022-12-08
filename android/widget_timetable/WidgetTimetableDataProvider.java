@@ -114,12 +114,10 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
                 R.color.pink_shade300,
                 R.color.purple_shade300};
 
-        Log.d("Provied", "created, " + this.appWidgetId);
     }
 
     @Override
     public void onCreate() {
-        Log.d("Provider", "OnCreate");
         initData();
     }
 
@@ -135,12 +133,6 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
 
     @Override
     public int getCount() {
-        /*try {
-            return tt_days.get(rday).getJSONObject(tt_days.get(rday).length() - 1).getInt("Oraszam");
-        } catch (Exception e) {
-            Log.d("Filc", "exception:", e);
-        }
-        return 0;*/
 
         return day_subjects.size();
     }
@@ -163,7 +155,6 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
         /* Text Colors */
         view.setInt(R.id.tt_item_num, "setTextColor", getColor(context, witem.NumColor));
         view.setInt(R.id.tt_item_name, "setTextColor",  getColor(context, witem.NameColor));
-        Log.d("nodesc", String.valueOf(witem.NameNodescColor));
         view.setInt(R.id.tt_item_name_nodesc, "setTextColor",  getColor(context, witem.NameNodescColor));
         view.setInt(R.id.tt_item_desc, "setTextColor",  getColor(context, witem.DescColor));
     }
@@ -252,7 +243,6 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
     }
 
     private void initData() {
-        Log.d("widgets", "Init data called");
 
         theme = getThemeAccent(context);
 
@@ -303,18 +293,8 @@ public class WidgetTimetableDataProvider implements RemoteViewsService.RemoteVie
                     lessonsChecked++;
                     i++;
                 }
-            } else {
-                Log.d("Lesson", "Only + lessons");
             }
-        } else {
-            Log.d("Lesson", "No lessons today :)");
         }
-
-        for (int i = 0; i < day_subjects.size(); i++) {
-            //Log.d("Lessons", day_subjects.get(i).lessonIndex + "." + day_subjects.get(i).lessonName);
-        }
-
-        Log.d("initData appId", ":" + appWidgetId);
     }
 
     public static Integer getThemeAccent(Context context) {

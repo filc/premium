@@ -44,7 +44,6 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
     @Override
     public void onUpdate(Context context, AppWidgetManager appWidgetManager, int[] appWidgetIds, SharedPreferences widgetData) {
-        Log.d("FILC||", "onUpdate called");
         for (int i = 0; i < appWidgetIds.length; i++) {
             RemoteViews views = generateView(context, appWidgetIds[i]);
 
@@ -76,11 +75,9 @@ public class WidgetTimetable extends HomeWidgetProvider {
         views.setViewVisibility(R.id.tt_grid_cont, View.GONE);
 
         if(!userLoggedIn(context)) {
-            Log.d("FILC | ", "User was not logged in, showing login widget");
             views.setViewVisibility(R.id.need_login, View.VISIBLE);
             views.setOnClickPendingIntent(R.id.open_login, makePending(context, ACTION_WIDGET_CLICK_BUY_PREMIUM, appId));
         } else if(premiumEnabled(context)) {
-            Log.d("FILC | ", "User was logged in and premium");
             views.setViewVisibility(R.id.tt_grid_cont, View.VISIBLE);
             views.setOnClickPendingIntent(R.id.nav_to_left, makePending(context, ACTION_WIDGET_CLICK_NAV_LEFT, appId));
             views.setOnClickPendingIntent(R.id.nav_to_right, makePending(context, ACTION_WIDGET_CLICK_NAV_RIGHT, appId));
@@ -89,7 +86,6 @@ public class WidgetTimetable extends HomeWidgetProvider {
             views.setRemoteAdapter(R.id.widget_list, serviceIntent);
             views.setEmptyView(R.id.widget_list, R.id.empty_view);
         } else  {
-            Log.d("FILC | ", "User was logged in but not premium");
             views.setViewVisibility(R.id.need_premium, View.VISIBLE);
             views.setOnClickPendingIntent(R.id.buy_premium, makePending(context, ACTION_WIDGET_CLICK_BUY_PREMIUM, appId));
         }
@@ -155,13 +151,10 @@ public class WidgetTimetable extends HomeWidgetProvider {
             catch (Exception e) {
                 e.printStackTrace();
             }
-        } else {
-            Log.d("wid", "dont have wid");
         }
     }
 
     public static String convertDayOfWeek(Context context, int rday) {
-        Log.d("convertDayOfWeek", ":" + rday);
 
         /*if(rday == -1) return DayOfWeek.of(1).getDisplayName(TextStyle.FULL, new Locale("hu", "HU"));
 
@@ -304,7 +297,6 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
     public static Locale getLocale(Context context) {
         DBManager dbManager = new DBManager(context.getApplicationContext());
-        Log.d("FILC", "checking Locale...");
 
         try {
             dbManager.open();
@@ -312,21 +304,17 @@ public class WidgetTimetable extends HomeWidgetProvider {
             dbManager.close();
 
             if(loc.equals("hu") || loc.equals("de")) {
-                Log.d("FILC", "Locale to " + loc + "_" + loc.toUpperCase());
                 return new Locale(loc, loc.toUpperCase());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        Log.d("FILC", "Locale to en_GB");
-
         return new Locale("en", "GB");
     }
 
     public static boolean premiumEnabled(Context context) {
         DBManager dbManager = new DBManager(context.getApplicationContext());
-        Log.d("FILC", "checking Premium...");
 
         try {
             dbManager.open();
@@ -334,14 +322,11 @@ public class WidgetTimetable extends HomeWidgetProvider {
             dbManager.close();
 
             if(!premium_token.equals("")) {
-                Log.d("FILC", "Premium status: true");
                 return true;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        Log.d("FILC", "Premium status: false");
 
         return false;
     }
@@ -352,8 +337,6 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
     public static String lastUserId(Context context) {
         DBManager dbManager = new DBManager(context.getApplicationContext());
-        Log.d("FILC", "checking User login state...");
-
         try {
             dbManager.open();
             Cursor cursor = dbManager.fetchLastUser();
@@ -361,14 +344,11 @@ public class WidgetTimetable extends HomeWidgetProvider {
 
             if(cursor != null && !cursor.getString(0).equals("")) {
                 String last_user = cursor.getString(0);
-                Log.d("FILC", "Login status: true | " + last_user);
                 return last_user;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        Log.d("FILC", "Login status: false");
 
         return "";
     }
