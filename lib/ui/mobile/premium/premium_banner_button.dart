@@ -99,11 +99,11 @@ class _PremiumBannerButtonState extends State<PremiumBannerButton> with SingleTi
       child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         children: const [
-          Icon(FilcIcons.premium),
+          Icon(FilcIcons.premium, color: Colors.white),
           SizedBox(width: 16.0),
           Text(
             "Get Premium",
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 24.0, color: Colors.white),
           ),
         ],
       ),
