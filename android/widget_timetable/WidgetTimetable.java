@@ -16,11 +16,14 @@ import android.widget.Toast;
 
 import org.joda.time.DateTime;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.time.DayOfWeek;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
 
@@ -282,6 +285,24 @@ public class WidgetTimetable extends HomeWidgetProvider {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        Collections.sort(gen_days, new Comparator<JSONArray>() {
+
+            public int compare(JSONArray a, JSONArray b) {
+                long valA = 0;
+                long valB = 0;
+
+                try {
+                    new DateTime( a.getJSONObject(0).getString("Datum")).getMillis();
+                    valA = (long) new DateTime( a.getJSONObject(0).getString("Datum")).getMillis();
+                    valB = (long) new DateTime( b.getJSONObject(0).getString("Datum")).getMillis();
+                }
+                catch (JSONException ignored) {
+                }
+
+                return (int) (valA - valB);
+            }
+        });
 
         return gen_days;
     }
