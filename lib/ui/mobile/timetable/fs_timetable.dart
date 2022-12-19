@@ -56,6 +56,7 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
 
     return Scaffold(
       body: ListView.builder(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.symmetric(horizontal: 6.0, vertical: 24.0),
         itemCount: maxIndex + 1,
         itemBuilder: (context, index) {
@@ -140,14 +141,22 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
                         color: AppColors.of(context).text.withOpacity(.7),
                       ),
                       const SizedBox(width: 8.0),
-                      Text(lessons[lessonIndex - dayOffset].name.capital()),
+                      Expanded(
+                        child: Text(
+                          lessons[lessonIndex - dayOffset].name.capital(),
+                          maxLines: 1,
+                          overflow: TextOverflow.clip,
+                          softWrap: false,
+                        ),
+                      ),
+                      const SizedBox(width: 15),
                     ],
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 26.0),
                     child: Text(
                       lessons[lessonIndex - dayOffset].room,
-                      style: TextStyle(color: AppColors.of(context).text.withOpacity(.5)),
+                      style: TextStyle(color: AppColors.of(context).text.withOpacity(.5), overflow: TextOverflow.ellipsis),
                     ),
                   ),
                 ],
