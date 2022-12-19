@@ -293,7 +293,6 @@ public class WidgetTimetable extends HomeWidgetProvider {
                 long valB = 0;
 
                 try {
-                    new DateTime( a.getJSONObject(0).getString("Datum")).getMillis();
                     valA = (long) new DateTime( a.getJSONObject(0).getString("Datum")).getMillis();
                     valB = (long) new DateTime( b.getJSONObject(0).getString("Datum")).getMillis();
                 }
