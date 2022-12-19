@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:filcnaplo/api/client.dart';
 import 'package:filcnaplo/models/settings.dart';
@@ -49,14 +50,14 @@ class PremiumAuth {
       final scopes = ((jsonDecode(res.body) as Map)["scopes"] as List).cast<String>();
       log("[INFO] Premium auth finish: ${scopes.join(',')}");
       await _settings.update(premiumAccessToken: accessToken, premiumScopes: scopes);
-      updateWidget();
+      if (Platform.isAndroid) updateWidget();
       return;
     } catch (err, sta) {
       log("[ERROR] Premium auth failed: $err\n$sta");
     }
 
     await _settings.update(premiumAccessToken: "", premiumScopes: []);
-    updateWidget();
+    if (Platform.isAndroid) updateWidget();
   }
 
   Future<bool?> updateWidget() async {
