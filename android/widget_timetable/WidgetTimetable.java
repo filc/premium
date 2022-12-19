@@ -339,9 +339,17 @@ public class WidgetTimetable extends HomeWidgetProvider {
         try {
             dbManager.open();
             String premium_token = dbManager.fetchPremiumToken().getString(0);
+            String premium_scopes_raw = dbManager.fetchPremiumScopes().getString(0);
             dbManager.close();
 
-            if(!premium_token.equals("")) {
+            JSONArray arr = new JSONArray(premium_scopes_raw);
+            List<String> premium_scopes = new ArrayList<>();
+            for(int i = 0; i < arr.length(); i++){
+                String scope = arr.getString(i);
+                premium_scopes.add(scope.substring(scope.lastIndexOf('.')  + 1));
+            }
+
+            if(!premium_token.equals("") && (premium_scopes.contains("*") || premium_scopes.contains("TIMETALBE_WIDGET"))) {
                 return true;
             }
         } catch (Exception e) {

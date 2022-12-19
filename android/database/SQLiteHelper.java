@@ -14,6 +14,7 @@ public class SQLiteHelper extends SQLiteOpenHelper {
     public static final String LAST_ACCOUNT_ID = "last_account_id";
     public static final String THEME = "theme";
     public static final String PREMIUM_TOKEN = "premium_token";
+    public static final String PREMIUM_SCOPES = "premium_scopes";
     public static final String LOCALE = "language";
     public static final String ACCENT_COLOR = "accent_color";
     public static final String TABLE_NAME_WIDGETS = "widgets";

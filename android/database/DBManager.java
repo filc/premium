@@ -68,6 +68,14 @@ public class DBManager {
         return cursor;
     }
 
+    public Cursor fetchPremiumScopes() {
+        Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.PREMIUM_SCOPES}, null, null, null, null, null);
+        if (cursor != null) {
+            cursor.moveToFirst();
+        }
+        return cursor;
+    }
+
     public Cursor fetchLocale() {
         Cursor cursor = this.database.query(SQLiteHelper.TABLE_NAME_SETTINGS, new String[]{SQLiteHelper.LOCALE}, null, null, null, null, null);
         if (cursor != null) {
