@@ -16,6 +16,7 @@ import 'package:filcnaplo_premium/ui/mobile/settings/theme.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:filcnaplo/theme/colors/colors.dart';
+import 'package:filcnaplo_mobile_ui/common/widgets/custom_switch.dart';
 
 class FilcColorPicker extends StatefulWidget {
   const FilcColorPicker({
@@ -135,7 +136,8 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
       (p) {
         ScaffoldMessenger.of(context).clearSnackBars();
         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text("Move the ${p == 0 ? 'Saturation (second)' : 'Value (third)'} slider first.", textAlign: TextAlign.center, style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w600)),
+            content: Text("Move the ${p == 0 ? 'Saturation (second)' : 'Value (third)'} slider first.",
+                textAlign: TextAlign.center, style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w600)),
             backgroundColor: AppColors.of(context).background));
       },
       displayThumbColor: widget.displayThumbColor,
@@ -157,42 +159,34 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
         children: [
           if (widget.colorMode != CustomColorMode.theme)
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 5.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Column(
                 children: [
-                  ColorIndicator(currentHsvColor),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0, right: 6.0),
-                          child: SizedBox(
-                            height: 40.0,
-                            width: double.infinity,
-                            child: colorPickerSlider(TrackType.hue),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 12.0, right: 6.0),
-                          child: SizedBox(
-                            height: 40.0,
-                            width: double.infinity,
-                            child: colorPickerSlider(TrackType.saturation),
-                          ),
-                        ),
-                        if (isAdvancedView)
-                          Padding(
-                            padding: const EdgeInsets.only(left: 12.0, right: 6.0),
-                            child: SizedBox(
-                              height: 40.0,
-                              width: double.infinity,
-                              child: colorPickerSlider(TrackType.value),
-                            ),
-                          ),
-                      ],
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: SizedBox(
+                      height: 45.0,
+                      width: double.infinity,
+                      child: colorPickerSlider(TrackType.hue),
                     ),
                   ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: SizedBox(
+                      height: 45.0,
+                      width: double.infinity,
+                      child: colorPickerSlider(TrackType.saturation),
+                    ),
+                  ),
+                  if (isAdvancedView)
+                    Padding(
+                      padding: const EdgeInsets.only(left: 12.0, right: 12.0),
+                      child: SizedBox(
+                        height: 45.0,
+                        width: double.infinity,
+                        child: colorPickerSlider(TrackType.value),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -255,12 +249,16 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
                   isAdvancedView = !isAdvancedView;
                 }),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                  padding: const EdgeInsets.only(left: 8.0, right: 8.0, top: 8.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      const SizedBox(width: 8.0),
+                      CustomSwitch(
+                        onChanged: (v) => setState(() => isAdvancedView = v),
+                        value: isAdvancedView,
+                      ),
+                      const SizedBox(width: 12.0),
                       Text(
                         "Advanced",
                         style: TextStyle(
@@ -268,12 +266,6 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
                           fontSize: 16.0,
                           color: AppColors.of(context).text.withOpacity(isAdvancedView ? 1.0 : .5),
                         ),
-                      ),
-                      const SizedBox(width: 4.0),
-                      Switch(
-                        onChanged: (v) => setState(() => isAdvancedView = v),
-                        value: isAdvancedView,
-                        activeColor: Theme.of(context).colorScheme.secondary,
                       ),
                     ],
                   ),

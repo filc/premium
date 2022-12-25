@@ -8,6 +8,7 @@
 /// Try to create a Color Picker with other layout on your own :)
 
 import 'dart:math';
+import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo_mobile_ui/common/custom_snack_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -109,16 +110,16 @@ class _SliderLayout extends MultiChildLayoutDelegate {
     layoutChild(
       track,
       BoxConstraints.tightFor(
-        width: size.width - 8.0,
-        height: size.height / 1.85,
+        width: size.width + 3,
+        height: size.height / 1.5,
       ),
     );
-    positionChild(track, Offset(4.0, size.height * 0.25));
+    positionChild(track, const Offset(-2.0, 0));
     layoutChild(
       thumb,
-      const BoxConstraints.tightFor(width: 5.0, height: 7.0),
+      BoxConstraints.tightFor(width: 5.5, height: 10.5),
     );
-    positionChild(thumb, Offset(0.0, size.height * 0.45));
+    positionChild(thumb, Offset(0.0,(size.height / 1.5) / 2 - 4.5));
     layoutChild(
       gestureContainer,
       BoxConstraints.tightFor(width: size.width, height: size.height),
@@ -381,7 +382,7 @@ class _ColorPickerInputState extends State<ColorPickerInput> {
               borderSide: const BorderSide(color: Colors.transparent, width: 0.0),
             ),
             contentPadding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 8.0),
-            fillColor: Theme.of(context).cardColor.withOpacity(.4),
+            fillColor: AppColors.of(context).text.withOpacity(.1),
           ),
           onChanged: (String value) {
             String input = value;
@@ -689,7 +690,7 @@ class ColorIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
-        boxShadow: [BoxShadow(color: color.opacity > 0.8 ? color.withOpacity(0.8) : color, offset: const Offset(1, 2), blurRadius: 5)],
+        boxShadow: [BoxShadow(color: color.opacity > 0.8 ? color.withOpacity(0.8) : color, offset: const Offset(0, 0), blurRadius: 5)],
       ),
       child: Material(
         color: Colors.transparent,

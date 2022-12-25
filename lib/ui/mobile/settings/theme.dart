@@ -15,6 +15,7 @@ import 'package:filcnaplo_premium/ui/mobile/flutter_colorpicker/colorpicker.dart
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'theme.i18n.dart';
 
 class PremiumCustomAccentColorSetting extends StatefulWidget {
   const PremiumCustomAccentColorSetting({Key? key}) : super(key: key);
@@ -444,10 +445,10 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: FilterBar(
                               items: [
-                                ColorTab(color: accentColorMap[settings.accentColor] ?? Colors.black, tab: const Tab(text: "Téma")),
-                                ColorTab(color: settings.customBackgroundColor ?? Colors.black, tab: const Tab(text: "Háttér")),
-                                ColorTab(color: settings.customHighlightColor ?? Colors.black, tab: const Tab(text: "Panel")),
-                                ColorTab(color: settings.customAccentColor ?? Colors.black, tab: const Tab(text: "Elem")),
+                                ColorTab(color: accentColorMap[settings.accentColor] ?? Colors.black, tab: Tab(text: "colorpicker_presets".i18n)),
+                                ColorTab(color: settings.customBackgroundColor ?? Colors.black, tab: Tab(text: "colorpicker_background".i18n)),
+                                ColorTab(color: settings.customHighlightColor ?? Colors.black, tab: Tab(text: "colorpicker_panels".i18n)),
+                                ColorTab(color: settings.customAccentColor ?? Colors.black, tab: Tab(text: "colorpicker_accent".i18n)),
                               ],
                               onTap: (i) => {
                                 if (i == 0)
