@@ -77,6 +77,14 @@ class PremiumAuth {
       return;
     }
 
+    // Skip premium check when disconnected
+    try {
+      final status = await InternetAddress.lookup('github.com');
+      if (status.isEmpty) return;
+    } on SocketException catch (_) {
+      return;
+    }
+
     try {
       final res = await http.post(Uri.parse(FilcAPI.premiumApi), body: {
         "access_token": _settings.premiumAccessToken,
