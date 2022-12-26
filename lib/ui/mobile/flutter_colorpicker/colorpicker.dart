@@ -205,19 +205,19 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
               ),
             ),
           SizedBox(
-            height: 65,
+            height: 70 * (widget.colorMode == CustomColorMode.theme ? 2 : 1),
             child: BlockPicker(
               pickerColor: Colors.red,
               layoutBuilder: (context, colors, child) {
                 return GridView.count(
                   shrinkWrap: true,
-                  crossAxisCount: 1,
+                  crossAxisCount: widget.colorMode == CustomColorMode.theme ? 2 : 1,
                   scrollDirection: Axis.horizontal,
                   crossAxisSpacing: 15,
                   physics: const BouncingScrollPhysics(),
                   mainAxisSpacing: 15,
                   padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 8.0),
-                  children: List.generate(colors.length + (widget.colorMode == CustomColorMode.theme ? 1 : 0), (index) {
+                  children: List.generate(colors.toSet().length + (widget.colorMode == CustomColorMode.theme ? 1 : 0), (index) {
                     if (widget.colorMode == CustomColorMode.theme) {
                       if (index == 0) {
                         return GestureDetector(

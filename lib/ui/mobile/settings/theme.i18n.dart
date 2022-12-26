@@ -8,18 +8,21 @@ extension SettingsLocalization on String {
           "colorpicker_background": "Background",
           "colorpicker_panels": "Panels",
           "colorpicker_accent": "Accent",
+          "need_sub": "You need Kupak subscription to use modify this.",
         },
         "hu_hu": {
           "colorpicker_presets": "Téma",
           "colorpicker_background": "Háttér",
           "colorpicker_panels": "Panelek",
           "colorpicker_accent": "Színtónus",
+          "need_sub": "A módosításhoz Kupak szintű előfizetés szükséges.",
         },
         "de_de": {
           "colorpicker_presets": "Farben",
           "colorpicker_background": "Hintergrund",
           "colorpicker_panels": "Tafeln",
           "colorpicker_accent": "Akzent",
+          "need_sub": "Sie benötigen ein Kupak-Abonnement, um diese Funktion zu ändern.",
         },
       };
 
