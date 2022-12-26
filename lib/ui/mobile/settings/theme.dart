@@ -46,7 +46,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
       curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
     ),
   );
-  late final Animation<double> backgroundAnimation = Tween<double>(begin: 0, end: 0.4).animate(
+  late final Animation<double> backgroundAnimation = Tween<double>(begin: 1.0, end: 0.4).animate(
     CurvedAnimation(
       parent: _openAnimController,
       curve: const Interval(0.25, 0.8, curve: Curves.easeInOut),
