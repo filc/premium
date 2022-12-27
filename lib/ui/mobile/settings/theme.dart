@@ -46,12 +46,6 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
       curve: const Interval(0.0, 0.8, curve: Curves.easeInOut),
     ),
   );
-  late final Animation<double> backgroundAnimation = Tween<double>(begin: 1.0, end: 0.4).animate(
-    CurvedAnimation(
-      parent: _openAnimController,
-      curve: const Interval(0.25, 0.8, curve: Curves.easeInOut),
-    ),
-  );
 
   late final Animation<double> backContainerAnimation = Tween<double>(begin: 100, end: 0).animate(
     CurvedAnimation(
@@ -144,14 +138,14 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
 
     if (mounted) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: AppColors.of(context).highlight,
+        systemNavigationBarColor: HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(.35).toColor(),
       ));
     }
 
     return WillPopScope(
       onWillPop: () async {
         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          systemNavigationBarColor: Theme.of(context).colorScheme.background,
+          systemNavigationBarColor: HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(.35).toColor(),
         ));
         return true;
       },
@@ -160,19 +154,19 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
         builder: (context, child) {
           return Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
+              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter,stops: const [0.0, 0.75], colors: [
                 Theme.of(context).colorScheme.background != AppColors.of(context).background
-                    ? Theme.of(context).colorScheme.background.withOpacity(.6)
-                    : const Color.fromARGB(255, 60, 60, 60).withOpacity(.6),
+                    ? Theme.of(context).colorScheme.background.withOpacity(.35)
+                    : const Color.fromARGB(255, 40, 40, 40).withOpacity(.75),
                 Theme.of(context).colorScheme.background != AppColors.of(context).background
-                    ? Theme.of(context).colorScheme.background.withOpacity(.3)
-                    : const Color.fromARGB(255, 60, 60, 60).withOpacity(.3),
+                    ? HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(.35).toColor()
+                    : const Color.fromARGB(255, 40, 40, 40).withOpacity(.35),
               ]),
             ),
             child: Opacity(
               opacity: fullPageAnimation.value,
               child: Scaffold(
-                backgroundColor: Theme.of(context).colorScheme.background.withOpacity(backgroundAnimation.value),
+                backgroundColor: Colors.transparent,
                 appBar: AppBar(
                   leading: BackButton(color: AppColors.of(context).text),
                   title: Text(
@@ -193,404 +187,413 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                           width: double.infinity,
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(24),
-                            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [
-                              Theme.of(context).colorScheme.background.withOpacity(1 - backContainerAnimation.value * (1 / 100)),
-                              Theme.of(context).colorScheme.background.withOpacity((.75) * (1 - backContainerAnimation.value * (1 / 100))),
+                            gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [0.35, 0.75], colors: [
+                              Theme.of(context).colorScheme.background,
+                              HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation((HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation + 0.15).clamp(0.0, 1.0)).toColor(),
                             ]),
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
                         ),
                       ),
                     ),
-                    Column(
-                      children: [
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 8.0),
-                            child: SizedBox(
-                              width: double.infinity,
-                              child: Padding(
-                                padding: const EdgeInsets.only(top: 24.0),
-                                child: Opacity(
-                                  opacity: 1 - backContentAnimation.value * (1 / 100),
-                                  child: SingleChildScrollView(
-                                    physics: const BouncingScrollPhysics(),
-                                    child: Transform.translate(
-                                      offset: Offset(0, -24 + backContentAnimation.value),
-                                      child: Transform.scale(
-                                        scale: backContentScaleAnimation.value,
-                                        child: Column(
-                                          children: [
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 6.0),
-                                              child: FilterBar(
-                                                items: const [
-                                                  Tab(text: "All"),
-                                                  Tab(text: "Grades"),
-                                                  Tab(text: "Messages"),
-                                                  Tab(text: "Absences"),
-                                                ],
-                                                controller: _testTabController,
-                                                padding: EdgeInsets.zero,
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
-                                              child: NewGradesSurprise(
-                                                [
-                                                  Grade.fromJson(
-                                                    {
-                                                      "Uid": "0,Ertekeles",
-                                                      "RogzitesDatuma": "2022-01-01T23:00:00Z",
-                                                      "KeszitesDatuma": "2022-01-01T23:00:00Z",
-                                                      "LattamozasDatuma": null,
-                                                      "Tantargy": {
-                                                        "Uid": "0",
-                                                        "Nev": "Filc szakirodalom",
-                                                        "Kategoria": {"Uid": "0,_", "Nev": "_", "Leiras": "Nem mondom meg"},
-                                                        "SortIndex": 2
-                                                      },
-                                                      "Tema": "Kupak csomag vásárlás vizsga",
-                                                      "Tipus": {
-                                                        "Uid": "0,_",
-                                                        "Nev": "_",
-                                                        "Leiras": "Évközi jegy/értékelés",
-                                                      },
-                                                      "Mod": {
-                                                        "Uid": "0,_",
-                                                        "Nev": "_",
-                                                        "Leiras": "_ feladat",
-                                                      },
-                                                      "ErtekFajta": {
-                                                        "Uid": "1,Osztalyzat",
-                                                        "Nev": "Osztalyzat",
-                                                        "Leiras": "Elégtelen (1) és Jeles (5) között az öt alapértelmezett érték"
-                                                      },
-                                                      "ErtekeloTanarNeve": "Premium",
-                                                      "Jelleg": "Ertekeles",
-                                                      "SzamErtek": 5,
-                                                      "SzovegesErtek": "Jeles(5)",
-                                                      "SulySzazalekErteke": 100,
-                                                      "SzovegesErtekelesRovidNev": null,
-                                                      "OsztalyCsoport": {"Uid": "0"},
-                                                      "SortIndex": 2
-                                                    },
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                                              child: Panel(
-                                                child: GradeTile(
-                                                  Grade.fromJson(
-                                                    {
-                                                      "Uid": "0,Ertekeles",
-                                                      "RogzitesDatuma": "2022-01-01T23:00:00Z",
-                                                      "KeszitesDatuma": "2022-01-01T23:00:00Z",
-                                                      "LattamozasDatuma": null,
-                                                      "Tantargy": {
-                                                        "Uid": "0",
-                                                        "Nev": "Filc szakosztály",
-                                                        "Kategoria": {"Uid": "0,_", "Nev": "_", "Leiras": "Nem mondom meg"},
-                                                        "SortIndex": 2
-                                                      },
-                                                      "Tema": "Kupak csomag vásárlás vizsga",
-                                                      "Tipus": {
-                                                        "Uid": "0,_",
-                                                        "Nev": "_",
-                                                        "Leiras": "Évközi jegy/értékelés",
-                                                      },
-                                                      "Mod": {
-                                                        "Uid": "0,_",
-                                                        "Nev": "_",
-                                                        "Leiras": "_ feladat",
-                                                      },
-                                                      "ErtekFajta": {
-                                                        "Uid": "1,Osztalyzat",
-                                                        "Nev": "Osztalyzat",
-                                                        "Leiras": "Elégtelen (1) és Jeles (5) között az öt alapértelmezett érték"
-                                                      },
-                                                      "ErtekeloTanarNeve": "Premium",
-                                                      "Jelleg": "Ertekeles",
-                                                      "SzamErtek": 5,
-                                                      "SzovegesErtek": "Jeles(5)",
-                                                      "SulySzazalekErteke": 100,
-                                                      "SzovegesErtekelesRovidNev": null,
-                                                      "OsztalyCsoport": {"Uid": "0"},
-                                                      "SortIndex": 2
-                                                    },
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                                              child: Panel(
-                                                child: HomeworkTile(
-                                                  Homework.fromJson(
-                                                    {
-                                                      "Uid": "0",
-                                                      "Tantargy": {
-                                                        "Uid": "0",
-                                                        "Nev": "Filc premium előnyei",
-                                                        "Kategoria": {
-                                                          "Uid": "0,_",
-                                                          "Nev": "_",
-                                                          "Leiras": "Filc premium előnyei",
-                                                        },
-                                                        "SortIndex": 0
-                                                      },
-                                                      "TantargyNeve": "Filc premium előnyei",
-                                                      "RogzitoTanarNeve": "Kupak János",
-                                                      "Szoveg": "45 perc filctollal való rajzolás",
-                                                      "FeladasDatuma": "2022-01-01T23:00:00Z",
-                                                      "HataridoDatuma": "2022-01-01T23:00:00Z",
-                                                      "RogzitesIdopontja": "2022-01-01T23:00:00Z",
-                                                      "IsTanarRogzitette": true,
-                                                      "IsTanuloHaziFeladatEnabled": false,
-                                                      "IsMegoldva": false,
-                                                      "IsBeadhato": false,
-                                                      "OsztalyCsoport": {"Uid": "0"},
-                                                      "IsCsatolasEngedelyezes": false
-                                                    },
-                                                  ),
-                                                  padding: EdgeInsets.zero,
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                                              child: Panel(
-                                                child: MessageTile(
-                                                  Message.fromJson(
-                                                    {
-                                                      "azonosito": 0,
-                                                      "isElolvasva": true,
-                                                      "isToroltElem": false,
-                                                      "tipus": {
-                                                        "azonosito": 1,
-                                                        "kod": "BEERKEZETT",
-                                                        "rovidNev": "Beérkezett üzenet",
-                                                        "nev": "Beérkezett üzenet",
-                                                        "leiras": "Beérkezett üzenet"
-                                                      },
-                                                      "uzenet": {
-                                                        "azonosito": 0,
-                                                        "kuldesDatum": "2022-01-01T23:00:00",
-                                                        "feladoNev": "Filc Napló",
-                                                        "feladoTitulus": "Nagyon magas szintű személy",
-                                                        "szoveg":
-                                                            "<p>Kedves Felhasználó!</p><p><br></p><p>A prémium vásárlásakor kapott filctollal 90%-al több esély van jó jegyek szerzésére.</p>",
-                                                        "targy": "Filctoll használati útmutató",
-                                                        "statusz": {
-                                                          "azonosito": 2,
-                                                          "kod": "KIKULDVE",
-                                                          "rovidNev": "Kiküldve",
-                                                          "nev": "Kiküldve",
-                                                          "leiras": "Kiküldve"
-                                                        },
-                                                        "cimzettLista": [
-                                                          {
-                                                            "azonosito": 0,
-                                                            "kretaAzonosito": 0,
-                                                            "nev": "Tinta Józsi",
-                                                            "tipus": {
-                                                              "azonosito": 0,
-                                                              "kod": "TANULO",
-                                                              "rovidNev": "Tanuló",
-                                                              "nev": "Tanuló",
-                                                              "leiras": "Tanuló"
-                                                            }
-                                                          },
-                                                        ],
-                                                        "csatolmanyok": [
-                                                          {"azonosito": 0, "fajlNev": "Filctoll.doc"}
-                                                        ]
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                                              child: Panel(
-                                                child: MessageTile(
-                                                  Message.fromJson(
-                                                    {
-                                                      "azonosito": 0,
-                                                      "isElolvasva": true,
-                                                      "isToroltElem": false,
-                                                      "tipus": {
-                                                        "azonosito": 1,
-                                                        "kod": "BEERKEZETT",
-                                                        "rovidNev": "Beérkezett üzenet",
-                                                        "nev": "Beérkezett üzenet",
-                                                        "leiras": "Beérkezett üzenet"
-                                                      },
-                                                      "uzenet": {
-                                                        "azonosito": 0,
-                                                        "kuldesDatum": "2022-01-01T23:00:00",
-                                                        "feladoNev": "Filc Napló",
-                                                        "feladoTitulus": "Nagyon magas szintű személy",
-                                                        "szoveg":
-                                                            "<p>Kedves Felhasználó!</p><p><br></p><p>A prémium vásárlásakor kapott filctollal 90%-al több esély van jó jegyek szerzésére.</p>",
-                                                        "targy": "Filctoll használati útmutató",
-                                                        "statusz": {
-                                                          "azonosito": 2,
-                                                          "kod": "KIKULDVE",
-                                                          "rovidNev": "Kiküldve",
-                                                          "nev": "Kiküldve",
-                                                          "leiras": "Kiküldve"
-                                                        },
-                                                        "cimzettLista": [
-                                                          {
-                                                            "azonosito": 0,
-                                                            "kretaAzonosito": 0,
-                                                            "nev": "Tinta Józsi",
-                                                            "tipus": {
-                                                              "azonosito": 0,
-                                                              "kod": "TANULO",
-                                                              "rovidNev": "Tanuló",
-                                                              "nev": "Tanuló",
-                                                              "leiras": "Tanuló"
-                                                            }
-                                                          },
-                                                        ],
-                                                        "csatolmanyok": [
-                                                          {"azonosito": 0, "fajlNev": "Filctoll.doc"}
-                                                        ]
-                                                      }
-                                                    },
-                                                  ),
-                                                ),
-                                              ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 8.0),
+                      child: SizedBox(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 24.0),
+                          child: Opacity(
+                            opacity: 1 - backContentAnimation.value * (1 / 100),
+                            child: SingleChildScrollView(
+                              physics: const BouncingScrollPhysics(),
+                              child: Transform.translate(
+                                offset: Offset(0, -24 + backContentAnimation.value),
+                                child: Transform.scale(
+                                  scale: backContentScaleAnimation.value,
+                                  child: Column(
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 32.0, vertical: 6.0),
+                                        child: FilterBar(
+                                          items: const [
+                                            Tab(text: "All"),
+                                            Tab(text: "Grades"),
+                                            Tab(text: "Messages"),
+                                            Tab(text: "Absences"),
+                                          ],
+                                          controller: _testTabController,
+                                          padding: EdgeInsets.zero,
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 8.0),
+                                        child: NewGradesSurprise(
+                                          [
+                                            Grade.fromJson(
+                                              {
+                                                "Uid": "0,Ertekeles",
+                                                "RogzitesDatuma": "2022-01-01T23:00:00Z",
+                                                "KeszitesDatuma": "2022-01-01T23:00:00Z",
+                                                "LattamozasDatuma": null,
+                                                "Tantargy": {
+                                                  "Uid": "0",
+                                                  "Nev": "Filc szakirodalom",
+                                                  "Kategoria": {"Uid": "0,_", "Nev": "_", "Leiras": "Nem mondom meg"},
+                                                  "SortIndex": 2
+                                                },
+                                                "Tema": "Kupak csomag vásárlás vizsga",
+                                                "Tipus": {
+                                                  "Uid": "0,_",
+                                                  "Nev": "_",
+                                                  "Leiras": "Évközi jegy/értékelés",
+                                                },
+                                                "Mod": {
+                                                  "Uid": "0,_",
+                                                  "Nev": "_",
+                                                  "Leiras": "_ feladat",
+                                                },
+                                                "ErtekFajta": {
+                                                  "Uid": "1,Osztalyzat",
+                                                  "Nev": "Osztalyzat",
+                                                  "Leiras": "Elégtelen (1) és Jeles (5) között az öt alapértelmezett érték"
+                                                },
+                                                "ErtekeloTanarNeve": "Premium",
+                                                "Jelleg": "Ertekeles",
+                                                "SzamErtek": 5,
+                                                "SzovegesErtek": "Jeles(5)",
+                                                "SulySzazalekErteke": 100,
+                                                "SzovegesErtekelesRovidNev": null,
+                                                "OsztalyCsoport": {"Uid": "0"},
+                                                "SortIndex": 2
+                                              },
                                             ),
                                           ],
                                         ),
                                       ),
-                                    ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                                        child: Panel(
+                                          child: GradeTile(
+                                            Grade.fromJson(
+                                              {
+                                                "Uid": "0,Ertekeles",
+                                                "RogzitesDatuma": "2022-01-01T23:00:00Z",
+                                                "KeszitesDatuma": "2022-01-01T23:00:00Z",
+                                                "LattamozasDatuma": null,
+                                                "Tantargy": {
+                                                  "Uid": "0",
+                                                  "Nev": "Filc szakosztály",
+                                                  "Kategoria": {"Uid": "0,_", "Nev": "_", "Leiras": "Nem mondom meg"},
+                                                  "SortIndex": 2
+                                                },
+                                                "Tema": "Kupak csomag vásárlás vizsga",
+                                                "Tipus": {
+                                                  "Uid": "0,_",
+                                                  "Nev": "_",
+                                                  "Leiras": "Évközi jegy/értékelés",
+                                                },
+                                                "Mod": {
+                                                  "Uid": "0,_",
+                                                  "Nev": "_",
+                                                  "Leiras": "_ feladat",
+                                                },
+                                                "ErtekFajta": {
+                                                  "Uid": "1,Osztalyzat",
+                                                  "Nev": "Osztalyzat",
+                                                  "Leiras": "Elégtelen (1) és Jeles (5) között az öt alapértelmezett érték"
+                                                },
+                                                "ErtekeloTanarNeve": "Premium",
+                                                "Jelleg": "Ertekeles",
+                                                "SzamErtek": 5,
+                                                "SzovegesErtek": "Jeles(5)",
+                                                "SulySzazalekErteke": 100,
+                                                "SzovegesErtekelesRovidNev": null,
+                                                "OsztalyCsoport": {"Uid": "0"},
+                                                "SortIndex": 2
+                                              },
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                                        child: Panel(
+                                          child: HomeworkTile(
+                                            Homework.fromJson(
+                                              {
+                                                "Uid": "0",
+                                                "Tantargy": {
+                                                  "Uid": "0",
+                                                  "Nev": "Filc premium előnyei",
+                                                  "Kategoria": {
+                                                    "Uid": "0,_",
+                                                    "Nev": "_",
+                                                    "Leiras": "Filc premium előnyei",
+                                                  },
+                                                  "SortIndex": 0
+                                                },
+                                                "TantargyNeve": "Filc premium előnyei",
+                                                "RogzitoTanarNeve": "Kupak János",
+                                                "Szoveg": "45 perc filctollal való rajzolás",
+                                                "FeladasDatuma": "2022-01-01T23:00:00Z",
+                                                "HataridoDatuma": "2022-01-01T23:00:00Z",
+                                                "RogzitesIdopontja": "2022-01-01T23:00:00Z",
+                                                "IsTanarRogzitette": true,
+                                                "IsTanuloHaziFeladatEnabled": false,
+                                                "IsMegoldva": false,
+                                                "IsBeadhato": false,
+                                                "OsztalyCsoport": {"Uid": "0"},
+                                                "IsCsatolasEngedelyezes": false
+                                              },
+                                            ),
+                                            padding: EdgeInsets.zero,
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                                        child: Panel(
+                                          child: MessageTile(
+                                            Message.fromJson(
+                                              {
+                                                "azonosito": 0,
+                                                "isElolvasva": true,
+                                                "isToroltElem": false,
+                                                "tipus": {
+                                                  "azonosito": 1,
+                                                  "kod": "BEERKEZETT",
+                                                  "rovidNev": "Beérkezett üzenet",
+                                                  "nev": "Beérkezett üzenet",
+                                                  "leiras": "Beérkezett üzenet"
+                                                },
+                                                "uzenet": {
+                                                  "azonosito": 0,
+                                                  "kuldesDatum": "2022-01-01T23:00:00",
+                                                  "feladoNev": "Filc Napló",
+                                                  "feladoTitulus": "Nagyon magas szintű személy",
+                                                  "szoveg":
+                                                      "<p>Kedves Felhasználó!</p><p><br></p><p>A prémium vásárlásakor kapott filctollal 90%-al több esély van jó jegyek szerzésére.</p>",
+                                                  "targy": "Filctoll használati útmutató",
+                                                  "statusz": {
+                                                    "azonosito": 2,
+                                                    "kod": "KIKULDVE",
+                                                    "rovidNev": "Kiküldve",
+                                                    "nev": "Kiküldve",
+                                                    "leiras": "Kiküldve"
+                                                  },
+                                                  "cimzettLista": [
+                                                    {
+                                                      "azonosito": 0,
+                                                      "kretaAzonosito": 0,
+                                                      "nev": "Tinta Józsi",
+                                                      "tipus": {
+                                                        "azonosito": 0,
+                                                        "kod": "TANULO",
+                                                        "rovidNev": "Tanuló",
+                                                        "nev": "Tanuló",
+                                                        "leiras": "Tanuló"
+                                                      }
+                                                    },
+                                                  ],
+                                                  "csatolmanyok": [
+                                                    {"azonosito": 0, "fajlNev": "Filctoll.doc"}
+                                                  ]
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
+                                        child: Panel(
+                                          child: MessageTile(
+                                            Message.fromJson(
+                                              {
+                                                "azonosito": 0,
+                                                "isElolvasva": true,
+                                                "isToroltElem": false,
+                                                "tipus": {
+                                                  "azonosito": 1,
+                                                  "kod": "BEERKEZETT",
+                                                  "rovidNev": "Beérkezett üzenet",
+                                                  "nev": "Beérkezett üzenet",
+                                                  "leiras": "Beérkezett üzenet"
+                                                },
+                                                "uzenet": {
+                                                  "azonosito": 0,
+                                                  "kuldesDatum": "2022-01-01T23:00:00",
+                                                  "feladoNev": "Filc Napló",
+                                                  "feladoTitulus": "Nagyon magas szintű személy",
+                                                  "szoveg":
+                                                      "<p>Kedves Felhasználó!</p><p><br></p><p>A prémium vásárlásakor kapott filctollal 90%-al több esély van jó jegyek szerzésére.</p>",
+                                                  "targy": "Filctoll használati útmutató",
+                                                  "statusz": {
+                                                    "azonosito": 2,
+                                                    "kod": "KIKULDVE",
+                                                    "rovidNev": "Kiküldve",
+                                                    "nev": "Kiküldve",
+                                                    "leiras": "Kiküldve"
+                                                  },
+                                                  "cimzettLista": [
+                                                    {
+                                                      "azonosito": 0,
+                                                      "kretaAzonosito": 0,
+                                                      "nev": "Tinta Józsi",
+                                                      "tipus": {
+                                                        "azonosito": 0,
+                                                        "kod": "TANULO",
+                                                        "rovidNev": "Tanuló",
+                                                        "nev": "Tanuló",
+                                                        "leiras": "Tanuló"
+                                                      }
+                                                    },
+                                                  ],
+                                                  "csatolmanyok": [
+                                                    {"azonosito": 0, "fajlNev": "Filctoll.doc"}
+                                                  ]
+                                                }
+                                              },
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),
                             ),
                           ),
                         ),
-                        SizedBox(
-                          width: double.infinity,
-                          child: Container(
-                            padding: const EdgeInsets.only(left: 12.0, right: 12.0, bottom: 12.0),
-                            decoration: BoxDecoration(
-                              borderRadius: const BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: AppColors.of(context).highlight.withOpacity(.5),
-                                  offset: const Offset(0, -4),
-                                  blurRadius: 16,
-                                  spreadRadius: 12,
-                                ),
-                              ],
-                              color: AppColors.of(context).highlight,
-                            ),
-                            child: Opacity(
-                              opacity: pickerContainerAnimation.value,
-                              child: Column(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                    child: FilterBar(
-                                      items: [
-                                        ColorTab(
-                                            color: accentColorMap[settings.accentColor] ?? unknownColor, tab: Tab(text: "colorpicker_presets".i18n)),
-                                        ColorTab(
-                                            unlocked: hasAccess,
-                                            color: settings.customBackgroundColor ?? unknownColor,
-                                            tab: Tab(text: "colorpicker_background".i18n)),
-                                        ColorTab(
-                                            unlocked: hasAccess,
-                                            color: settings.customHighlightColor ?? unknownColor,
-                                            tab: Tab(text: "colorpicker_panels".i18n)),
-                                        ColorTab(
-                                            unlocked: hasAccess,
-                                            color: settings.customAccentColor ?? unknownColor,
-                                            tab: Tab(text: "colorpicker_accent".i18n)),
-                                      ],
-                                      onTap: (index) {
-                                        if (!hasAccess) {
-                                          index = 0;
-                                          _colorsTabController.animateTo(0, duration: Duration.zero);
-
-                                          ScaffoldMessenger.of(context).clearSnackBars();
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                              content: Text("need_sub".i18n,
-                                                  textAlign: TextAlign.center,
-                                                  style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w600)),
-                                              backgroundColor: AppColors.of(context).background));
-                                        }
-
-                                        switch (index) {
-                                          case 0:
-                                            setState(() {
-                                              colorMode = CustomColorMode.theme;
-                                            });
-                                            break;
-                                          case 1:
-                                            setState(() {
-                                              colorMode = CustomColorMode.background;
-                                            });
-                                            break;
-                                          case 2:
-                                            setState(() {
-                                              colorMode = CustomColorMode.highlight;
-                                            });
-                                            break;
-                                          case 3:
-                                            setState(() {
-                                              colorMode = CustomColorMode.accent;
-                                            });
-                                            break;
-                                        }
-                                      },
-                                      controller: _colorsTabController,
-                                      padding: EdgeInsets.zero,
-                                    ),
-                                  ),
-                                  FilcColorPicker(
-                                    colorMode: colorMode,
-                                    pickerColor: colorMode == CustomColorMode.accent
-                                        ? settings.customAccentColor ?? unknownColor
-                                        : colorMode == CustomColorMode.background
-                                            ? settings.customBackgroundColor ?? unknownColor
-                                            : colorMode == CustomColorMode.theme
-                                                ? (accentColorMap[settings.accentColor] ?? AppColors.of(context).text) // idk what else
-                                                : settings.customHighlightColor ?? unknownColor,
-                                    onColorChanged: (c) {
-                                      setState(() {
-                                        updateCustomColor(c, false);
-                                      });
-                                      setTheme(settings.theme, false);
-                                    },
-                                    onColorChangeEnd: (c, {adaptive}) {
-                                      setState(() {
-                                        if (adaptive == true) {
-                                          settings.update(accentColor: AccentColor.adaptive);
-                                          settings.update(customBackgroundColor: AppColors.of(context).background, store: true);
-                                          settings.update(customHighlightColor: AppColors.of(context).highlight, store: true);
-                                        } else {
-                                          updateCustomColor(c, true);
-                                        }
-                                      });
-                                      setTheme(settings.theme, true);
-                                    },
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Wrap(
+                        children: [
+                          SizedBox(
+                            width: double.infinity,
+                            child: Container(
+                              padding: const EdgeInsets.only(bottom: 12.0),
+                              decoration: BoxDecoration(
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Theme.of(context).colorScheme.background.withOpacity(.5),
+                                    offset: const Offset(0, -4),
+                                    blurRadius: 16,
+                                    spreadRadius: 12,
                                   ),
                                 ],
+                                //borderRadius: const BorderRadius.only(topLeft: Radius.circular(24.0), topRight: Radius.circular(24.0)),
+                                gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [0.0, 0.175], colors: [
+                                  Theme.of(context).colorScheme.background.withOpacity(.0),
+                                  HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(.35).toColor(),
+                                ]),
+                                color: AppColors.of(context).highlight,
+                              ),
+                              child: Opacity(
+                                opacity: pickerContainerAnimation.value,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                                      child: FilterBar(
+                                        items: [
+                                          ColorTab(
+                                              color: accentColorMap[settings.accentColor] ?? unknownColor,
+                                              tab: Tab(text: "colorpicker_presets".i18n)),
+                                          ColorTab(
+                                              unlocked: hasAccess,
+                                              color: settings.customBackgroundColor ?? unknownColor,
+                                              tab: Tab(text: "colorpicker_background".i18n)),
+                                          ColorTab(
+                                              unlocked: hasAccess,
+                                              color: settings.customHighlightColor ?? unknownColor,
+                                              tab: Tab(text: "colorpicker_panels".i18n)),
+                                          ColorTab(
+                                              unlocked: hasAccess,
+                                              color: settings.customAccentColor ?? unknownColor,
+                                              tab: Tab(text: "colorpicker_accent".i18n)),
+                                        ],
+                                        onTap: (index) {
+                                          if (!hasAccess) {
+                                            index = 0;
+                                            _colorsTabController.animateTo(0, duration: Duration.zero);
+
+                                            ScaffoldMessenger.of(context).clearSnackBars();
+                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                                content: Text("need_sub".i18n,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w600)),
+                                                backgroundColor: AppColors.of(context).background));
+                                          }
+
+                                          switch (index) {
+                                            case 0:
+                                              setState(() {
+                                                colorMode = CustomColorMode.theme;
+                                              });
+                                              break;
+                                            case 1:
+                                              setState(() {
+                                                colorMode = CustomColorMode.background;
+                                              });
+                                              break;
+                                            case 2:
+                                              setState(() {
+                                                colorMode = CustomColorMode.highlight;
+                                              });
+                                              break;
+                                            case 3:
+                                              setState(() {
+                                                colorMode = CustomColorMode.accent;
+                                              });
+                                              break;
+                                          }
+                                        },
+                                        controller: _colorsTabController,
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                                      child: FilcColorPicker(
+                                        colorMode: colorMode,
+                                        pickerColor: colorMode == CustomColorMode.accent
+                                            ? settings.customAccentColor ?? unknownColor
+                                            : colorMode == CustomColorMode.background
+                                                ? settings.customBackgroundColor ?? unknownColor
+                                                : colorMode == CustomColorMode.theme
+                                                    ? (accentColorMap[settings.accentColor] ?? AppColors.of(context).text) // idk what else
+                                                    : settings.customHighlightColor ?? unknownColor,
+                                        onColorChanged: (c) {
+                                          setState(() {
+                                            updateCustomColor(c, false);
+                                          });
+                                          setTheme(settings.theme, false);
+                                        },
+                                        onColorChangeEnd: (c, {adaptive}) {
+                                          setState(() {
+                                            if (adaptive == true) {
+                                              settings.update(accentColor: AccentColor.adaptive);
+                                              settings.update(customBackgroundColor: AppColors.of(context).background, store: true);
+                                              settings.update(customHighlightColor: AppColors.of(context).highlight, store: true);
+                                            } else {
+                                              updateCustomColor(c, true);
+                                            }
+                                          });
+                                          setTheme(settings.theme, true);
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        )
-                      ],
+                        ],
+                      ),
                     ),
                   ],
                 ),
