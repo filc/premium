@@ -242,6 +242,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                           ],
                                           controller: _testTabController,
                                           padding: EdgeInsets.zero,
+                                          censored: true,
                                         ),
                                       ),
                                       Padding(
@@ -287,6 +288,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                               },
                                             ),
                                           ],
+                                          censored: true,
                                         ),
                                       ),
                                       Padding(
@@ -332,6 +334,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                               },
                                             ),
                                             padding: EdgeInsets.zero,
+                                            censored: true,
                                           ),
                                         ),
                                       ),
@@ -367,6 +370,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                               },
                                             ),
                                             padding: EdgeInsets.zero,
+                                            censored: true,
                                           ),
                                         ),
                                       ),
@@ -421,60 +425,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                                 }
                                               },
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                      Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 6.0),
-                                        child: Panel(
-                                          child: MessageTile(
-                                            Message.fromJson(
-                                              {
-                                                "azonosito": 0,
-                                                "isElolvasva": true,
-                                                "isToroltElem": false,
-                                                "tipus": {
-                                                  "azonosito": 1,
-                                                  "kod": "BEERKEZETT",
-                                                  "rovidNev": "Beérkezett üzenet",
-                                                  "nev": "Beérkezett üzenet",
-                                                  "leiras": "Beérkezett üzenet"
-                                                },
-                                                "uzenet": {
-                                                  "azonosito": 0,
-                                                  "kuldesDatum": "2022-01-01T23:00:00",
-                                                  "feladoNev": "Filc Napló",
-                                                  "feladoTitulus": "Nagyon magas szintű személy",
-                                                  "szoveg":
-                                                      "<p>Kedves Felhasználó!</p><p><br></p><p>A prémium vásárlásakor kapott filctollal 90%-al több esély van jó jegyek szerzésére.</p>",
-                                                  "targy": "Filctoll használati útmutató",
-                                                  "statusz": {
-                                                    "azonosito": 2,
-                                                    "kod": "KIKULDVE",
-                                                    "rovidNev": "Kiküldve",
-                                                    "nev": "Kiküldve",
-                                                    "leiras": "Kiküldve"
-                                                  },
-                                                  "cimzettLista": [
-                                                    {
-                                                      "azonosito": 0,
-                                                      "kretaAzonosito": 0,
-                                                      "nev": "Tinta Józsi",
-                                                      "tipus": {
-                                                        "azonosito": 0,
-                                                        "kod": "TANULO",
-                                                        "rovidNev": "Tanuló",
-                                                        "nev": "Tanuló",
-                                                        "leiras": "Tanuló"
-                                                      }
-                                                    },
-                                                  ],
-                                                  "csatolmanyok": [
-                                                    {"azonosito": 0, "fajlNev": "Filctoll.doc"}
-                                                  ]
-                                                }
-                                              },
-                                            ),
+                                            censored: true,
                                           ),
                                         ),
                                       ),
