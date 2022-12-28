@@ -142,10 +142,14 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   @override
   Widget build(BuildContext context) {
     bool hasAccess = Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.customColors);
+    bool sameAsBackground = Theme.of(context).colorScheme.background != AppColors.of(context).background;
 
-    late final Color backgroundGradientBottomColor = HSVColor.fromColor(Theme.of(context).colorScheme.background)
-        .withSaturation((HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - (0.35 * backgroundAnimation.value)).clamp(0.0, 1.0))
-        .toColor();
+    final backgroundGradientBottomHSV = sameAsBackground
+        ? HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(
+            (HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - (0.35 * backgroundAnimation.value)).clamp(0.0, 1.0))
+        : HSVColor.fromColor(Theme.of(context).highlightColor).withValue(0.1).withAlpha(1.0);
+
+    late final Color backgroundGradientBottomColor = backgroundGradientBottomHSV.toColor();
 
     if (mounted) {
       SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -165,17 +169,20 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
         builder: (context, child) {
           return Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, stops: const [
-                0.0,
-                0.75
-              ], colors: [
-                Theme.of(context).colorScheme.background != AppColors.of(context).background
-                    ? Theme.of(context).colorScheme.background.withOpacity(1 - (0.65 * backgroundAnimation.value))
-                    : Theme.of(context).highlightColor.withOpacity(.125 * backgroundAnimation.value),
-                Theme.of(context).colorScheme.background != AppColors.of(context).background
-                    ? backgroundGradientBottomColor
-                    : Theme.of(context).highlightColor.withOpacity(.075 * backgroundAnimation.value),
-              ]),
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                stops: const [0.0, 0.75],
+                colors: sameAsBackground
+                    ? [
+                        Theme.of(context).colorScheme.background.withOpacity(1 - (0.65 * backgroundAnimation.value)),
+                        backgroundGradientBottomColor,
+                      ]
+                    : [
+                        backgroundGradientBottomColor.withOpacity(0.25 * backgroundAnimation.value),
+                        backgroundGradientBottomColor.withOpacity(backgroundAnimation.value),
+                      ],
+              ),
             ),
             child: Opacity(
               opacity: fullPageAnimation.value,
@@ -206,9 +213,9 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                               0.75
                             ], colors: [
                               Theme.of(context).colorScheme.background,
-                              HSVColor.fromColor(Theme.of(context).colorScheme.background)
+                              sameAsBackground ? HSVColor.fromColor(Theme.of(context).colorScheme.background)
                                   .withSaturation((HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - 0.15).clamp(0.0, 1.0))
-                                  .toColor(),
+                                  .toColor() : backgroundGradientBottomColor,
                             ]),
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -461,7 +468,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                     0.0,
                                     0.175
                                   ], colors: [
-                                    backgroundGradientBottomColor.withOpacity(.0),
+                                    backgroundGradientBottomColor,
                                     backgroundGradientBottomColor,
                                   ]),
                                   color: AppColors.of(context).highlight,
