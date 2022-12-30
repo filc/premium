@@ -23,6 +23,8 @@ dependencies:
   url_launcher: ^6.1.6
   dropdown_button2: ^1.8.9
   home_widget: ^0.1.6
+  image_picker: ^0.8.6
+  image_crop: ^0.4.1
 
 dev_dependencies:
   flutter_lints: ^1.0.0
