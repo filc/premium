@@ -66,16 +66,23 @@ class _UserNicknameEditorState extends State<UserNicknameEditor> {
       ),
       actions: [
         TextButton(
-          child: Text("cancel".i18n),
+          child: Text(
+            "cancel".i18n,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
           onPressed: () {
             Navigator.of(context).maybePop();
           },
         ),
         TextButton(
-          child: Text("done".i18n),
+          child: Text(
+            "done".i18n,
+            style: const TextStyle(fontWeight: FontWeight.w500),
+          ),
           onPressed: () {
             user.user!.nickname = _userName.text.trim();
             Provider.of<DatabaseProvider>(context, listen: false).store.storeUser(user.user!);
+            Provider.of<UserProvider>(context, listen: false).refresh();
             Navigator.of(context).pop(true);
           },
         ),
