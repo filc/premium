@@ -6,7 +6,9 @@ import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo/utils/format.dart';
 import 'package:filcnaplo_kreta_api/models/subject.dart';
+import 'package:filcnaplo_kreta_api/providers/absence_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/grade_provider.dart';
+import 'package:filcnaplo_kreta_api/providers/timetable_provider.dart';
 import 'package:filcnaplo_mobile_ui/common/bottom_sheet_menu/rounded_bottom_sheet.dart';
 import 'package:filcnaplo_mobile_ui/common/panel/panel.dart';
 import 'package:filcnaplo_mobile_ui/common/panel/panel_button.dart';
@@ -44,7 +46,12 @@ class MenuRenamedSubjects extends StatelessWidget {
           : Icon(FeatherIcons.penTool, color: AppColors.of(context).text.withOpacity(.25)),
       trailingDivider: true,
       trailing: Switch(
-        onChanged: (v) => settings.update(renamedSubjectsEnabled: v),
+        onChanged: (v) async {
+          settings.update(renamedSubjectsEnabled: v);
+          await Provider.of<GradeProvider>(context, listen: false).convertBySettings();
+          await Provider.of<TimetableProvider>(context, listen: false).convertBySettings();
+          await Provider.of<AbsenceProvider>(context, listen: false).convertBySettings();
+        },
         value: settings.renamedSubjectsEnabled,
         activeColor: Theme.of(context).colorScheme.secondary,
       ),
@@ -211,7 +218,10 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
                   final renamedSubs = await fetchRenamedSubjects();
 
                   renamedSubs[selectedSubjectId!] = _subjectName.text;
-                  dbProvider.userStore.storeRenamedSubjects(renamedSubs, userId: user.id!);
+                  await dbProvider.userStore.storeRenamedSubjects(renamedSubs, userId: user.id!);
+                  await Provider.of<GradeProvider>(context, listen: false).convertBySettings();
+                  await Provider.of<TimetableProvider>(context, listen: false).convertBySettings();
+                  await Provider.of<AbsenceProvider>(context, listen: false).convertBySettings();
                 }
                 Navigator.of(context).pop(true);
                 setState(() {});
