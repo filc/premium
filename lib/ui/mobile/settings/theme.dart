@@ -156,7 +156,10 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
         builder: (context, child) {
           final backgroundGradientBottomColor = isBackgroundDifferent
               ? Theme.of(context).colorScheme.background
-              : HSVColor.fromColor(Theme.of(context).highlightColor).withValue(currentTheme == ThemeMode.dark ? 0.1 : 0.9).withAlpha(1.0).toColor();
+              : HSVColor.fromColor(Theme.of(context).colorScheme.background)
+                  .withValue(currentTheme == ThemeMode.dark ? 0.1 * _openAnimController.value : 1.0 - (0.1 * _openAnimController.value))
+                  .withAlpha(1.0)
+                  .toColor();
 
           SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
             systemNavigationBarColor: backgroundGradientBottomColor,
@@ -170,7 +173,10 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                 stops: const [0.0, 0.75],
                 colors: isBackgroundDifferent
                     ? [
-                        Theme.of(context).colorScheme.background.withOpacity(1 - (0.65 * backgroundAnimation.value)),
+                        Theme.of(context)
+                            .colorScheme
+                            .background
+                            .withOpacity(1 - ((currentTheme == ThemeMode.dark ? 0.65 : 0.45) * backgroundAnimation.value)),
                         backgroundGradientBottomColor,
                       ]
                     : [backgroundGradientBottomColor, backgroundGradientBottomColor],
