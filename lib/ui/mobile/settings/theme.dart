@@ -99,9 +99,9 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
     super.dispose();
   }
 
-  void setTheme(ThemeMode mode, bool store) {
-    settings.update(theme: mode, store: store);
-    Provider.of<ThemeModeObserver>(context, listen: false).changeTheme(mode);
+  void setTheme(ThemeMode mode, bool store) async {
+    await settings.update(theme: mode, store: store);
+    Provider.of<ThemeModeObserver>(context, listen: false).changeTheme(mode, updateNavbarColor: false);
   }
 
   Color? getCustomColor() {
@@ -142,46 +142,38 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
   @override
   Widget build(BuildContext context) {
     bool hasAccess = Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.customColors);
-    bool sameAsBackground = Theme.of(context).colorScheme.background != AppColors.of(context).background;
+    bool isBackgroundDifferent = Theme.of(context).colorScheme.background != AppColors.of(context).background;
 
-    final backgroundGradientBottomHSV = sameAsBackground
-        ? HSVColor.fromColor(Theme.of(context).colorScheme.background).withSaturation(
-            (HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - (0.35 * backgroundAnimation.value)).clamp(0.0, 1.0))
-        : HSVColor.fromColor(Theme.of(context).highlightColor).withValue(0.1).withAlpha(1.0);
-
-    late final Color backgroundGradientBottomColor = backgroundGradientBottomHSV.toColor();
-
-    if (mounted) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        systemNavigationBarColor: backgroundGradientBottomColor,
-      ));
-    }
+    ThemeMode currentTheme = Theme.of(context).brightness == Brightness.light ? ThemeMode.light : ThemeMode.dark;
 
     return WillPopScope(
       onWillPop: () async {
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          systemNavigationBarColor: Theme.of(context).colorScheme.background,
-        ));
+        Provider.of<ThemeModeObserver>(context, listen: false).changeTheme(settings.theme, updateNavbarColor: true);
         return true;
       },
       child: AnimatedBuilder(
         animation: _openAnimController,
         builder: (context, child) {
+          final backgroundGradientBottomColor = isBackgroundDifferent
+              ? Theme.of(context).colorScheme.background
+              : HSVColor.fromColor(Theme.of(context).highlightColor).withValue(currentTheme == ThemeMode.dark ? 0.1 : 0.9).withAlpha(1.0).toColor();
+
+          SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+            systemNavigationBarColor: backgroundGradientBottomColor,
+          ));
+
           return Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 stops: const [0.0, 0.75],
-                colors: sameAsBackground
+                colors: isBackgroundDifferent
                     ? [
                         Theme.of(context).colorScheme.background.withOpacity(1 - (0.65 * backgroundAnimation.value)),
                         backgroundGradientBottomColor,
                       ]
-                    : [
-                        backgroundGradientBottomColor.withOpacity(0.25 * backgroundAnimation.value),
-                        backgroundGradientBottomColor.withOpacity(backgroundAnimation.value),
-                      ],
+                    : [backgroundGradientBottomColor, backgroundGradientBottomColor],
               ),
             ),
             child: Opacity(
@@ -213,9 +205,12 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                               0.75
                             ], colors: [
                               Theme.of(context).colorScheme.background,
-                              sameAsBackground ? HSVColor.fromColor(Theme.of(context).colorScheme.background)
-                                  .withSaturation((HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - 0.15).clamp(0.0, 1.0))
-                                  .toColor() : backgroundGradientBottomColor,
+                              isBackgroundDifferent
+                                  ? HSVColor.fromColor(Theme.of(context).colorScheme.background)
+                                      .withSaturation(
+                                          (HSVColor.fromColor(Theme.of(context).colorScheme.background).saturation - 0.15).clamp(0.0, 1.0))
+                                      .toColor()
+                                  : backgroundGradientBottomColor,
                             ]),
                           ),
                           margin: const EdgeInsets.symmetric(vertical: 30, horizontal: 20),
@@ -471,7 +466,6 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                     backgroundGradientBottomColor,
                                     backgroundGradientBottomColor,
                                   ]),
-                                  color: AppColors.of(context).highlight,
                                 ),
                                 child: Column(
                                   children: [

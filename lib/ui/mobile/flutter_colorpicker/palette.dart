@@ -119,7 +119,7 @@ class _SliderLayout extends MultiChildLayoutDelegate {
       thumb,
       BoxConstraints.tightFor(width: 5.5, height: 10.5),
     );
-    positionChild(thumb, Offset(0.0,(size.height / 1.5) / 2 - 4.5));
+    positionChild(thumb, Offset(0.0, (size.height / 1.5) / 2 - 4.5));
     layoutChild(
       gestureContainer,
       BoxConstraints.tightFor(width: size.width, height: size.height),
@@ -550,26 +550,10 @@ class ColorPickerSlider extends StatelessWidget {
         }
         onColorChanged(newColor);
         break;
-      case TrackType.saturationForHSL:
-        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withSaturation(progress)));
-        break;
       case TrackType.value:
         onColorChanged(hsvColor.withValue(progress));
         break;
-      case TrackType.lightness:
-        onColorChanged(hslToHsv(hsvToHsl(hsvColor).withLightness(progress)));
-        break;
-      case TrackType.red:
-        onColorChanged(HSVColor.fromColor(hsvColor.toColor().withRed((progress * 0xff).round())));
-        break;
-      case TrackType.green:
-        onColorChanged(HSVColor.fromColor(hsvColor.toColor().withGreen((progress * 0xff).round())));
-        break;
-      case TrackType.blue:
-        onColorChanged(HSVColor.fromColor(hsvColor.toColor().withBlue((progress * 0xff).round())));
-        break;
-      case TrackType.alpha:
-        onColorChanged(hsvColor.withAlpha(localDx.clamp(0.0, box.maxWidth - 30.0) / (box.maxWidth - 30.0)));
+      default:
         break;
     }
   }
@@ -651,7 +635,12 @@ class ColorPickerSlider extends StatelessWidget {
                 RenderBox? getBox = context.findRenderObject() as RenderBox?;
                 return GestureDetector(
                   onPanDown: (DragDownDetails details) => getBox != null ? slideEvent(getBox, box, details.globalPosition) : null,
-                  onPanEnd: (details) => onColorChangeEnd(),
+                  onPanEnd: (details) {
+                    if ((trackType == TrackType.hue && hsvColor.saturation == 0) || (trackType == TrackType.saturation && hsvColor.value == 0)) {
+                      return;
+                    }
+                    onColorChangeEnd();
+                  },
                   onPanUpdate: (DragUpdateDetails details) => getBox != null ? slideEvent(getBox, box, details.globalPosition) : null,
                 );
               },
@@ -690,7 +679,12 @@ class ColorIndicator extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: color,
-        boxShadow: [BoxShadow(color: color.opacity > 0.8 ? color.withOpacity(0.8) : color, offset: const Offset(0, 0), blurRadius: 5)],
+        boxShadow: [
+          BoxShadow(
+              color: useWhiteForeground(color) ? Colors.white.withOpacity(.5) : Colors.black.withOpacity(.5),
+              offset: const Offset(0, 0),
+              blurRadius: 5)
+        ],
       ),
       child: Material(
         color: Colors.transparent,
