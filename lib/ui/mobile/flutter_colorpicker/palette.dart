@@ -8,11 +8,15 @@
 /// Try to create a Color Picker with other layout on your own :)
 
 import 'dart:math';
+import 'package:filcnaplo/models/settings.dart';
+import 'package:filcnaplo/theme/colors/accent.dart';
 import 'package:filcnaplo/theme/colors/colors.dart';
+import 'package:filcnaplo/theme/observer.dart';
 import 'package:filcnaplo_mobile_ui/common/custom_snack_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'utils.dart';
 
 /// Palette types for color picker area widget.
@@ -661,6 +665,7 @@ class ColorIndicator extends StatelessWidget {
     this.icon,
     this.width = 50.0,
     this.height = 50.0,
+    this.adaptive = false,
   }) : super(key: key);
 
   final HSVColor hsvColor;
@@ -668,6 +673,7 @@ class ColorIndicator extends StatelessWidget {
   final double width;
   final double height;
   final IconData? icon;
+  final bool adaptive;
 
   @override
   Widget build(BuildContext context) {
@@ -690,7 +696,10 @@ class ColorIndicator extends StatelessWidget {
         color: Colors.transparent,
         child: AnimatedOpacity(
           duration: const Duration(milliseconds: 210),
-          opacity: icon != null || currentHsvColor == hsvColor ? 1 : 0,
+          opacity: (icon != null || currentHsvColor == hsvColor) &&
+                  (adaptive || Provider.of<SettingsProvider>(context, listen: false).accentColor != AccentColor.adaptive)
+              ? 1
+              : 0,
           child: Icon(icon ?? Icons.done, color: useWhiteForeground(color) ? Colors.white : Colors.black),
         ),
       ),

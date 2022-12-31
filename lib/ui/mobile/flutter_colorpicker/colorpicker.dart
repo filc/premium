@@ -223,7 +223,7 @@ class _FilcColorPickerState extends State<FilcColorPicker> {
                         return GestureDetector(
                           onTap: () => widget.onColorChangeEnd(const Color(0x000000), adaptive: true),
                           child: ColorIndicator(HSVColor.fromColor(const Color.fromARGB(255, 255, 238, 177)),
-                              icon: CupertinoIcons.wand_stars, currentHsvColor: currentHsvColor, width: 30, height: 30),
+                              icon: CupertinoIcons.wand_stars, currentHsvColor: currentHsvColor, width: 30, height: 30, adaptive: true),
                         );
                       }
                       index--;
