@@ -187,6 +187,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
               child: Scaffold(
                 backgroundColor: Colors.transparent,
                 appBar: AppBar(
+                  surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
                   leading: BackButton(color: AppColors.of(context).text),
                   title: Text(
                     "Preview",

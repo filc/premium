@@ -241,6 +241,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
     return Scaffold(
         key: _scaffoldKey,
         appBar: AppBar(
+          surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
           leading: BackButton(color: AppColors.of(context).text),
           title: Text(
             "Tantárgyak átnevezése",
