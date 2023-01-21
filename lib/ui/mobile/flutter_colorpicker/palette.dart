@@ -7,12 +7,9 @@
 ///
 /// Try to create a Color Picker with other layout on your own :)
 
-import 'dart:math';
 import 'package:filcnaplo/models/settings.dart';
 import 'package:filcnaplo/theme/colors/accent.dart';
 import 'package:filcnaplo/theme/colors/colors.dart';
-import 'package:filcnaplo/theme/observer.dart';
-import 'package:filcnaplo_mobile_ui/common/custom_snack_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -121,7 +118,7 @@ class _SliderLayout extends MultiChildLayoutDelegate {
     positionChild(track, const Offset(-2.0, 0));
     layoutChild(
       thumb,
-      BoxConstraints.tightFor(width: 5.5, height: 10.5),
+      const BoxConstraints.tightFor(width: 5.5, height: 10.5),
     );
     positionChild(thumb, Offset(0.0, (size.height / 1.5) / 2 - 4.5));
     layoutChild(

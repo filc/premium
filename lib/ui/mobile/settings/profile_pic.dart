@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:filcnaplo/api/providers/database_provider.dart';
@@ -68,7 +69,7 @@ class _UserProfilePicEditorState extends State<UserProfilePicEditor> {
         _file = imageFile;
       });
     } on PlatformException catch (e) {
-      print('Failed to pick image: $e');
+      log('Failed to pick image: $e');
     }
   }
 

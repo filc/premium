@@ -9,7 +9,6 @@ import 'package:filcnaplo_kreta_api/models/subject.dart';
 import 'package:filcnaplo_kreta_api/providers/absence_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/grade_provider.dart';
 import 'package:filcnaplo_kreta_api/providers/timetable_provider.dart';
-import 'package:filcnaplo_mobile_ui/common/bottom_sheet_menu/rounded_bottom_sheet.dart';
 import 'package:filcnaplo_mobile_ui/common/panel/panel.dart';
 import 'package:filcnaplo_mobile_ui/common/panel/panel_button.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
@@ -94,7 +93,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
       builder: (context) => StatefulBuilder(builder: (context, setS) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14.0))),
-          title: Text("Tantárgy átnevezése"),
+          title: const Text("Tantárgy átnevezése"),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

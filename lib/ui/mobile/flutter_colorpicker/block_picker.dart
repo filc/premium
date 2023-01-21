@@ -21,28 +21,28 @@ typedef PickerLayoutBuilder = Widget Function(BuildContext context, List<Color> 
 typedef PickerItemBuilder = Widget Function(Color color, bool isCurrentColor, void Function() changeColor);
 
 // Provide a list of colors for block color picker.
-const List<Color> _defaultColors = [
-  Colors.red,
-  Colors.pink,
-  Colors.purple,
-  Colors.deepPurple,
-  Colors.indigo,
-  Colors.blue,
-  Colors.lightBlue,
-  Colors.cyan,
-  Colors.teal,
-  Colors.green,
-  Colors.lightGreen,
-  Colors.lime,
-  Colors.yellow,
-  Colors.amber,
-  Colors.orange,
-  Colors.deepOrange,
-  Colors.brown,
-  Colors.grey,
-  Colors.blueGrey,
-  Colors.black,
-];
+// const List<Color> _defaultColors = [
+//   Colors.red,
+//   Colors.pink,
+//   Colors.purple,
+//   Colors.deepPurple,
+//   Colors.indigo,
+//   Colors.blue,
+//   Colors.lightBlue,
+//   Colors.cyan,
+//   Colors.teal,
+//   Colors.green,
+//   Colors.lightGreen,
+//   Colors.lime,
+//   Colors.yellow,
+//   Colors.amber,
+//   Colors.orange,
+//   Colors.deepOrange,
+//   Colors.brown,
+//   Colors.grey,
+//   Colors.blueGrey,
+//   Colors.black,
+// ];
 
 // Provide a layout for [BlockPicker].
 Widget _defaultLayoutBuilder(BuildContext context, List<Color> colors, PickerItem child) {

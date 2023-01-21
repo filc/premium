@@ -1,9 +1,7 @@
 import 'package:filcnaplo/models/settings.dart';
-import 'package:filcnaplo/theme/observer.dart';
 import 'package:filcnaplo_premium/api/auth.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 
 class PremiumProvider extends ChangeNotifier {
   final SettingsProvider _settings;
