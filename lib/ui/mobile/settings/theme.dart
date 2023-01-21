@@ -14,6 +14,7 @@ import 'package:filcnaplo_mobile_ui/common/widgets/homework/homework_tile.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:filcnaplo_premium/providers/premium_provider.dart';
 import 'package:filcnaplo_premium/ui/mobile/flutter_colorpicker/colorpicker.dart';
+import 'package:filcnaplo_premium/ui/mobile/premium/upsell.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -501,12 +502,7 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                             index = 0;
                                             _colorsTabController.animateTo(0, duration: Duration.zero);
 
-                                            ScaffoldMessenger.of(context).clearSnackBars();
-                                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                                content: Text("need_sub".i18n,
-                                                    textAlign: TextAlign.center,
-                                                    style: TextStyle(color: AppColors.of(context).text, fontWeight: FontWeight.w600)),
-                                                backgroundColor: AppColors.of(context).background));
+                                            PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.customcolors);
                                           }
 
                                           switch (index) {
@@ -538,33 +534,35 @@ class _PremiumCustomAccentColorSettingState extends State<PremiumCustomAccentCol
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.symmetric(horizontal: 12.0),
-                                      child: FilcColorPicker(
-                                        colorMode: colorMode,
-                                        pickerColor: colorMode == CustomColorMode.accent
-                                            ? settings.customAccentColor ?? unknownColor
-                                            : colorMode == CustomColorMode.background
-                                                ? settings.customBackgroundColor ?? unknownColor
-                                                : colorMode == CustomColorMode.theme
-                                                    ? (accentColorMap[settings.accentColor] ?? AppColors.of(context).text) // idk what else
-                                                    : settings.customHighlightColor ?? unknownColor,
-                                        onColorChanged: (c) {
-                                          setState(() {
-                                            updateCustomColor(c, false);
-                                          });
-                                          setTheme(settings.theme, false);
-                                        },
-                                        onColorChangeEnd: (c, {adaptive}) {
-                                          setState(() {
-                                            if (adaptive == true) {
-                                              settings.update(accentColor: AccentColor.adaptive);
-                                              settings.update(customBackgroundColor: AppColors.of(context).background, store: true);
-                                              settings.update(customHighlightColor: AppColors.of(context).highlight, store: true);
-                                            } else {
-                                              updateCustomColor(c, true);
-                                            }
-                                          });
-                                          setTheme(settings.theme, true);
-                                        },
+                                      child: SafeArea(
+                                        child: FilcColorPicker(
+                                          colorMode: colorMode,
+                                          pickerColor: colorMode == CustomColorMode.accent
+                                              ? settings.customAccentColor ?? unknownColor
+                                              : colorMode == CustomColorMode.background
+                                                  ? settings.customBackgroundColor ?? unknownColor
+                                                  : colorMode == CustomColorMode.theme
+                                                      ? (accentColorMap[settings.accentColor] ?? AppColors.of(context).text) // idk what else
+                                                      : settings.customHighlightColor ?? unknownColor,
+                                          onColorChanged: (c) {
+                                            setState(() {
+                                              updateCustomColor(c, false);
+                                            });
+                                            setTheme(settings.theme, false);
+                                          },
+                                          onColorChangeEnd: (c, {adaptive}) {
+                                            setState(() {
+                                              if (adaptive == true) {
+                                                settings.update(accentColor: AccentColor.adaptive);
+                                                settings.update(customBackgroundColor: AppColors.of(context).background, store: true);
+                                                settings.update(customHighlightColor: AppColors.of(context).highlight, store: true);
+                                              } else {
+                                                updateCustomColor(c, true);
+                                              }
+                                            });
+                                            setTheme(settings.theme, true);
+                                          },
+                                        ),
                                       ),
                                     ),
                                   ],

@@ -2,7 +2,7 @@ name: filcnaplo_premium
 publish_to: "none"
 
 environment:
-  sdk: ">=2.16.0-80.1.beta <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"
 
 dependencies:
   flutter:

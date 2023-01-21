@@ -1,6 +1,7 @@
 import 'package:filcnaplo/theme/colors/colors.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:filcnaplo_premium/providers/premium_provider.dart';
+import 'package:filcnaplo_premium/ui/mobile/premium/upsell.dart';
 import 'package:flutter/material.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:filcnaplo_mobile_ui/pages/grades/grades_page.i18n.dart';
@@ -18,19 +19,15 @@ final List<List<dynamic>> avgDropItems = [
 class PremiumAverageSelector extends StatelessWidget {
   const PremiumAverageSelector({Key? key, this.onChanged, required this.value}) : super(key: key);
 
-  final Function(String?)? onChanged;
+  final Function(int?)? onChanged;
   final int value;
 
   @override
   Widget build(BuildContext context) {
-    if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.gradeStats)) {
-      return Text("annual_average".i18n);
-    }
-
-    return DropdownButton2(
+    return DropdownButton2<int>(
       items: avgDropItems
-          .map((item) => DropdownMenuItem<String>(
-                value: item[0],
+          .map((item) => DropdownMenuItem<int>(
+                value: item[1],
                 child: Text(
                   item[0],
                   style: TextStyle(
@@ -42,7 +39,14 @@ class PremiumAverageSelector extends StatelessWidget {
                 ),
               ))
           .toList(),
-      onChanged: onChanged,
+      onChanged: (int? value) {
+        if (Provider.of<PremiumProvider>(context, listen: false).hasScope(PremiumScopes.gradeStats)) {
+          if (onChanged != null) onChanged!(value);
+        } else {
+          PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.gradestats);
+        }
+      },
+      value: avgDropItems[value][1],
       iconSize: 14,
       iconEnabledColor: AppColors.of(context).text,
       iconDisabledColor: AppColors.of(context).text,
