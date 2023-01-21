@@ -7,6 +7,7 @@ enum PremiumFeature {
   profile,
   weeklytimetable,
   goalplanner,
+  widget,
 }
 
 enum PremiumFeatureLevel { kupak, tinta }
@@ -17,6 +18,7 @@ const Map<PremiumFeature, PremiumFeatureLevel> _featureLevels = {
   PremiumFeature.profile: PremiumFeatureLevel.kupak,
   PremiumFeature.weeklytimetable: PremiumFeatureLevel.tinta,
   PremiumFeature.goalplanner: PremiumFeatureLevel.tinta,
+  PremiumFeature.widget: PremiumFeatureLevel.tinta,
 };
 
 const Map<PremiumFeature, String> _featureAssets = {
@@ -25,6 +27,7 @@ const Map<PremiumFeature, String> _featureAssets = {
   PremiumFeature.profile: "assets/images/premium_nickname_showcase.png",
   PremiumFeature.weeklytimetable: "assets/images/premium_timetable_showcase.png",
   PremiumFeature.goalplanner: "assets/images/premium_goal_showcase.png",
+  PremiumFeature.widget: "assets/images/premium_widget_showcase.png",
 };
 
 const Map<PremiumFeature, String> _featureTitles = {
@@ -33,6 +36,7 @@ const Map<PremiumFeature, String> _featureTitles = {
   PremiumFeature.profile: "Nem tetszik a neved?",
   PremiumFeature.weeklytimetable: "Szeretnéd egyszerre az egész hetet látni?",
   PremiumFeature.goalplanner: "Kövesd a céljaidat, sok-sok statisztikával.",
+  PremiumFeature.widget: "Órák a kezdőképernyőd kényelméből.",
 };
 
 const Map<PremiumFeature, String> _featureDescriptions = {
@@ -41,6 +45,7 @@ const Map<PremiumFeature, String> _featureDescriptions = {
   PremiumFeature.profile: "Kupak szinten változtathatod a nevedet, sőt, akár a profilképedet is.",
   PremiumFeature.weeklytimetable: "Támogass Tinta szinten a heti órarend funkcióért.",
   PremiumFeature.goalplanner: "A célkövetéshez támogass Tinta szinten.",
+  PremiumFeature.widget: "Támogass Tinta szinten, és helyezz egy widgetet a kezdőképernyődre.",
 };
 
 class PremiumLockedFeatureUpsell extends StatelessWidget {
