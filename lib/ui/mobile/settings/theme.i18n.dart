@@ -15,7 +15,7 @@ extension SettingsLocalization on String {
           "colorpicker_background": "Háttér",
           "colorpicker_panels": "Panelek",
           "colorpicker_accent": "Színtónus",
-          "need_sub": "A módosításhoz Kupak szintű előfizetés szükséges.",
+          "need_sub": "A módosításhoz Kupak szintű támogatás szükséges.",
         },
         "de_de": {
           "colorpicker_presets": "Farben",
