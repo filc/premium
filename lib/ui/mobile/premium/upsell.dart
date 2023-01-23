@@ -1,10 +1,13 @@
 import 'package:filcnaplo/icons/filc_icons.dart';
+import 'package:filcnaplo_mobile_ui/premium/premium_screen.dart';
 import 'package:flutter/material.dart';
 
 enum PremiumFeature {
   gradestats,
   customcolors,
   profile,
+  iconpack,
+  subjectrename,
   weeklytimetable,
   goalplanner,
   widget,
@@ -16,6 +19,8 @@ const Map<PremiumFeature, PremiumFeatureLevel> _featureLevels = {
   PremiumFeature.gradestats: PremiumFeatureLevel.kupak,
   PremiumFeature.customcolors: PremiumFeatureLevel.kupak,
   PremiumFeature.profile: PremiumFeatureLevel.kupak,
+  PremiumFeature.iconpack: PremiumFeatureLevel.kupak,
+  PremiumFeature.subjectrename: PremiumFeatureLevel.kupak,
   PremiumFeature.weeklytimetable: PremiumFeatureLevel.tinta,
   PremiumFeature.goalplanner: PremiumFeatureLevel.tinta,
   PremiumFeature.widget: PremiumFeatureLevel.tinta,
@@ -34,6 +39,8 @@ const Map<PremiumFeature, String> _featureTitles = {
   PremiumFeature.gradestats: "Találtál egy prémium funkciót.",
   PremiumFeature.customcolors: "Több személyre szabás kell?",
   PremiumFeature.profile: "Nem tetszik a neved?",
+  PremiumFeature.iconpack: "Jobban tetszettek a régi ikonok?",
+  PremiumFeature.subjectrename: "Sokáig tart elolvasni, hogy \"Földrajz természettudomány\"?",
   PremiumFeature.weeklytimetable: "Szeretnéd egyszerre az egész hetet látni?",
   PremiumFeature.goalplanner: "Kövesd a céljaidat, sok-sok statisztikával.",
   PremiumFeature.widget: "Órák a kezdőképernyőd kényelméből.",
@@ -43,6 +50,8 @@ const Map<PremiumFeature, String> _featureDescriptions = {
   PremiumFeature.gradestats: "Támogass Kupak szinten, hogy több statisztikát láthass. ",
   PremiumFeature.customcolors: "Támogass Kupak szinten, és szabd személyre az elemek, a háttér, és a panelek színeit.",
   PremiumFeature.profile: "Kupak szinten változtathatod a nevedet, sőt, akár a profilképedet is.",
+  PremiumFeature.iconpack: "Támogass Kupak szinten, hogy ikon témát választhass.",
+  PremiumFeature.subjectrename: "Támogass Kupak szinten, hogy átnevezhesd Föcire.",
   PremiumFeature.weeklytimetable: "Támogass Tinta szinten a heti órarend funkcióért.",
   PremiumFeature.goalplanner: "A célkövetéshez támogass Tinta szinten.",
   PremiumFeature.widget: "Támogass Tinta szinten, és helyezz egy widgetet a kezdőképernyődre.",
@@ -62,7 +71,7 @@ class PremiumLockedFeatureUpsell extends StatelessWidget {
       : Theme.of(context).brightness == Brightness.light
           ? const Color(0xff691A9B)
           : const Color(0xffA66FC8);
-  String _getAsset() => _featureAssets[feature]!;
+  String? _getAsset() => _featureAssets[feature];
   String _getTitle() => _featureTitles[feature]!;
   String _getDescription() => _featureDescriptions[feature]!;
 
@@ -93,10 +102,11 @@ class PremiumLockedFeatureUpsell extends StatelessWidget {
             ),
 
             // Image showcase
-            Padding(
-              padding: const EdgeInsets.only(top: 8.0),
-              child: Image.asset(_getAsset()),
-            ),
+            if (_getAsset() != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 8.0),
+                child: Image.asset(_getAsset()!),
+              ),
 
             // Dialog title
             Padding(
@@ -132,7 +142,9 @@ class PremiumLockedFeatureUpsell extends StatelessWidget {
                       foregroundColor: MaterialStatePropertyAll(color),
                       overlayColor: MaterialStatePropertyAll(color.withOpacity(.1))),
                   onPressed: () {
-                    // navigate to premium screen
+                    Navigator.of(context, rootNavigator: true).push(MaterialPageRoute(builder: (context) {
+                      return const PremiumScreen();
+                    }));
                   },
                   child: const Text(
                     "Vigyél oda!",

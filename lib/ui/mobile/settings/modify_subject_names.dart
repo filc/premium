@@ -13,6 +13,7 @@ import 'package:filcnaplo_mobile_ui/common/panel/panel.dart';
 import 'package:filcnaplo_mobile_ui/common/panel/panel_button.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:filcnaplo_premium/providers/premium_provider.dart';
+import 'package:filcnaplo_premium/ui/mobile/premium/upsell.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -25,13 +26,14 @@ class MenuRenamedSubjects extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.timetableWidget)) {
-      return const SizedBox(); // TODO: premium upsell
-    }
-
     return PanelButton(
       padding: const EdgeInsets.only(left: 14.0),
       onPressed: () {
+        if (!Provider.of<PremiumProvider>(context, listen: false).hasScope(PremiumScopes.renameSubjects)) {
+          PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.subjectrename);
+          return;
+        }
+
         Navigator.of(context, rootNavigator: true).push(
           CupertinoPageRoute(builder: (context) => const ModifySubjectNames()),
         );
@@ -46,6 +48,11 @@ class MenuRenamedSubjects extends StatelessWidget {
       trailingDivider: true,
       trailing: Switch(
         onChanged: (v) async {
+          if (!Provider.of<PremiumProvider>(context, listen: false).hasScope(PremiumScopes.renameSubjects)) {
+            PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.subjectrename);
+            return;
+          }
+
           settings.update(renamedSubjectsEnabled: v);
           await Provider.of<GradeProvider>(context, listen: false).convertBySettings();
           await Provider.of<TimetableProvider>(context, listen: false).convertBySettings();

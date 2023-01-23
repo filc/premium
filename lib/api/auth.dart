@@ -44,20 +44,22 @@ class PremiumAuth {
     }
   }
 
-  Future<void> finishAuth(String accessToken) async {
+  Future<bool> finishAuth(String accessToken) async {
     try {
-      final res = await http.get(Uri.parse("${FilcAPI.premiumScopesApi}?access_token=${Uri.encodeComponent(accessToken)}"));
-      final scopes = ((jsonDecode(res.body) as Map)["scopes"] as List).cast<String>();
-      log("[INFO] Premium auth finish: ${scopes.join(',')}");
-      await _settings.update(premiumAccessToken: accessToken, premiumScopes: scopes);
+      // final res = await http.get(Uri.parse("${FilcAPI.premiumScopesApi}?access_token=${Uri.encodeComponent(accessToken)}"));
+      // final scopes = ((jsonDecode(res.body) as Map)["scopes"] as List).cast<String>();
+      // log("[INFO] Premium auth finish: ${scopes.join(',')}");
+      await _settings.update(premiumAccessToken: accessToken);
+      final result = await refreshAuth();
       if (Platform.isAndroid) updateWidget();
-      return;
+      return result;
     } catch (err, sta) {
       log("[ERROR] Premium auth failed: $err\n$sta");
     }
 
     await _settings.update(premiumAccessToken: "", premiumScopes: []);
     if (Platform.isAndroid) updateWidget();
+    return false;
   }
 
   Future<bool?> updateWidget() async {
@@ -71,37 +73,48 @@ class PremiumAuth {
     return false;
   }
 
-  Future<void> refreshAuth({bool removePremium = false}) async {
+  Future<bool> refreshAuth({bool removePremium = false}) async {
     if (!removePremium) {
       if (_settings.premiumAccessToken == "") {
-        await _settings.update(premiumScopes: []);
-        return;
+        await _settings.update(premiumScopes: [], premiumLogin: "");
+        return false;
       }
 
       // Skip premium check when disconnected
       try {
         final status = await InternetAddress.lookup('github.com');
-        if (status.isEmpty) return;
+        if (status.isEmpty) return false;
       } on SocketException catch (_) {
-        return;
+        return false;
       }
 
-      try {
-        final res = await http.post(Uri.parse(FilcAPI.premiumApi), body: {
-          "access_token": _settings.premiumAccessToken,
-        });
+      for (int tries = 0; tries < 3; tries++) {
+        try {
+          final res = await http.post(Uri.parse(FilcAPI.premiumApi), body: {
+            "access_token": _settings.premiumAccessToken,
+          });
 
-        final premium = PremiumResult.fromJson(jsonDecode(res.body) as Map);
-        // Activation succeeded
-        log("[INFO] Premium activated: ${premium.scopes.join(',')}");
-        await _settings.update(premiumAccessToken: premium.accessToken, premiumScopes: premium.scopes);
-        return;
-      } catch (err, sta) {
-        log("[ERROR] Premium activation failed: $err\n$sta");
+          if (res.body == "") throw "empty body";
+
+          final premium = PremiumResult.fromJson(jsonDecode(res.body) as Map);
+          // Activation succeeded
+          log("[INFO] Premium activated: ${premium.scopes.join(',')}");
+          await _settings.update(
+            premiumAccessToken: premium.accessToken,
+            premiumScopes: premium.scopes,
+            premiumLogin: premium.login,
+          );
+          return true;
+        } catch (err, sta) {
+          log("[ERROR] Premium activation failed: $err\n$sta");
+        }
+
+        await Future.delayed(const Duration(seconds: 1));
       }
     }
 
     // Activation failed
-    await _settings.update(premiumAccessToken: "", premiumScopes: []);
+    await _settings.update(premiumAccessToken: "", premiumScopes: [], premiumLogin: "");
+    return false;
   }
 }

@@ -16,6 +16,9 @@ class PremiumScopes {
   /// Icon pack customization for subjects
   static const customIcons = "filc.premium.CUSTOM_ICONS";
 
+  /// Modify subject names
+  static const renameSubjects = "filc.premium.RENAME_SUBJECTS";
+
   /// Tinta
 
   /// Timetable homescreen widget

@@ -3,6 +3,7 @@ import 'package:filcnaplo_mobile_ui/common/panel/panel_button.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/settings_helper.dart';
 import 'package:filcnaplo_premium/models/premium_scopes.dart';
 import 'package:filcnaplo_premium/providers/premium_provider.dart';
+import 'package:filcnaplo_premium/ui/mobile/premium/upsell.dart';
 import 'package:flutter/material.dart';
 import 'package:filcnaplo_mobile_ui/screens/settings/settings_screen.i18n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
@@ -14,14 +15,15 @@ class PremiumIconPackSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (!Provider.of<PremiumProvider>(context).hasScope(PremiumScopes.customIcons)) {
-      return const SizedBox(); // TODO: premium upsell
-    }
-
     final settings = Provider.of<SettingsProvider>(context);
 
     return PanelButton(
       onPressed: () {
+        if (!Provider.of<PremiumProvider>(context, listen: false).hasScope(PremiumScopes.customIcons)) {
+          PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.iconpack);
+          return;
+        }
+
         SettingsHelper.iconPack(context);
       },
       title: Text("icon_pack".i18n),

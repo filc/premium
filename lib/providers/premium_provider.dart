@@ -8,6 +8,7 @@ class PremiumProvider extends ChangeNotifier {
   List<String> get scopes => _settings.premiumScopes;
   bool hasScope(String scope) => scopes.contains(scope) || scopes.contains(PremiumScopes.all);
   String get accessToken => _settings.premiumAccessToken;
+  String get login => _settings.premiumLogin;
   bool get hasPremium => _settings.premiumAccessToken != "" && _settings.premiumScopes.isNotEmpty;
 
   late final PremiumAuth _auth;
