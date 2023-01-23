@@ -143,8 +143,9 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
                       const SizedBox(width: 8.0),
                       Expanded(
                         child: Text(
-                          lessons[lessonIndex - dayOffset].name.capital(),
+                          lessons[lessonIndex - dayOffset].subject.renamedTo ?? lessons[lessonIndex - dayOffset].subject.name.capital(),
                           maxLines: 1,
+                          style: TextStyle(fontStyle: lessons[lessonIndex - dayOffset].subject.isRenamed ? FontStyle.italic : null),
                           overflow: TextOverflow.clip,
                           softWrap: false,
                         ),
