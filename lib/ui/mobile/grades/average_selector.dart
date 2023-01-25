@@ -8,13 +8,13 @@ import 'package:filcnaplo_mobile_ui/pages/grades/grades_page.i18n.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
-final List<List<dynamic>> avgDropItems = [
-  ["annual_average".i18n, 0],
-  ["3_months_average".i18n, 90],
-  ["30_days_average".i18n, 30],
-  ["14_days_average".i18n, 14],
-  ["7_days_average".i18n, 7],
-];
+final Map<int, String> avgDropItems = {
+  0: "annual_average".i18n,
+  90: "3_months_average".i18n,
+  30: "30_days_average".i18n,
+  14: "14_days_average".i18n,
+  7: "7_days_average".i18n,
+};
 
 class PremiumAverageSelector extends StatelessWidget {
   const PremiumAverageSelector({Key? key, this.onChanged, required this.value}) : super(key: key);
@@ -25,11 +25,11 @@ class PremiumAverageSelector extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DropdownButton2<int>(
-      items: avgDropItems
+      items: avgDropItems.keys
           .map((item) => DropdownMenuItem<int>(
-                value: item[1],
+                value: item,
                 child: Text(
-                  item[0],
+                  avgDropItems[item] ?? "",
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.bold,
@@ -46,7 +46,7 @@ class PremiumAverageSelector extends StatelessWidget {
           PremiumLockedFeatureUpsell.show(context: context, feature: PremiumFeature.gradestats);
         }
       },
-      value: avgDropItems[value][1],
+      value: value,
       iconSize: 14,
       iconEnabledColor: AppColors.of(context).text,
       iconDisabledColor: AppColors.of(context).text,
@@ -71,7 +71,7 @@ class PremiumAverageSelector extends StatelessWidget {
         height: 30,
         child: Row(
           children: [
-            Text(avgDropItems[value][0],
+            Text(avgDropItems[value] ?? "",
                 style: Theme.of(context)
                     .textTheme
                     .titleSmall!
