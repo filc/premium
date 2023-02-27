@@ -31,6 +31,8 @@ import hu.filc.naplo.database.DBManager;
 import hu.filc.naplo.MainActivity;
 import hu.filc.naplo.R;
 
+import hu.filc.naplo.utils.Week;
+
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 import es.antonborri.home_widget.HomeWidgetBackgroundIntent;
@@ -257,25 +259,29 @@ public class WidgetTimetable extends HomeWidgetProvider {
                 return gen_days;
             }
 
-            JSONArray fecthtt = new JSONArray(ct.getString(0));
+            JSONObject fecthtt = new JSONObject(ct.getString(0));
 
             JSONArray dayArray = new JSONArray();
             String currday = "";
 
-            for (int i=0; i < fecthtt.length(); i++)
+            String currweek = String.valueOf(Week.current().id());
+
+            JSONArray week = fecthtt.getJSONArray(currweek);
+
+            for (int i=0; i < week.length(); i++)
             {
                 try {
-                    if(i == 0) currday = fecthtt.getJSONObject(0).getString("Datum");
-                    JSONObject oraObj = fecthtt.getJSONObject(i);
+                    if(i == 0) currday = week.getJSONObject(0).getString("Datum");
+                    JSONObject oraObj = week.getJSONObject(i);
 
                     if(!currday.equals(oraObj.getString("Datum"))) {
                         gen_days.add(dayArray);
-                        currday = fecthtt.getJSONObject(i).getString("Datum");
+                        currday = week.getJSONObject(i).getString("Datum");
                         dayArray = new JSONArray();
                     }
 
                     dayArray.put(oraObj);
-                    if(i == fecthtt.length() - 1) {
+                    if(i == week.length() - 1) {
                         gen_days.add(dayArray);
                     }
                 } catch (Exception e) {
