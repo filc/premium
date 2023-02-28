@@ -87,6 +87,8 @@ class _PremiumFSTimetableState extends State<PremiumFSTimetable> {
 
             final lessons = days[dayIndex].where((l) => l.subject.id != "" || l.isEmpty).toList();
 
+            if (lessons.isEmpty) continue;
+
             if (dayIndex >= days.length || (lessonIndex + dayOffset) >= lessons.length) {
               columns.add(SizedBox(width: colw));
               continue;
