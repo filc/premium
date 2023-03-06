@@ -19,6 +19,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_feather_icons/flutter_feather_icons.dart';
 import 'package:provider/provider.dart';
 
+import 'modify_subject_names.i18n.dart';
+
 class MenuRenamedSubjects extends StatelessWidget {
   const MenuRenamedSubjects({Key? key, required this.settings}) : super(key: key);
 
@@ -39,7 +41,7 @@ class MenuRenamedSubjects extends StatelessWidget {
         );
       },
       title: Text(
-        "Tantárgyak átnevezése",
+        "rename_subjects".i18n,
         style: TextStyle(color: AppColors.of(context).text.withOpacity(settings.renamedSubjectsEnabled ? 1.0 : .5)),
       ),
       leading: settings.renamedSubjectsEnabled
@@ -100,7 +102,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
       builder: (context) => StatefulBuilder(builder: (context, setS) {
         return AlertDialog(
           shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(14.0))),
-          title: const Text("Tantárgy átnevezése"),
+          title: Text("rename_subject".i18n),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -161,7 +163,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
                   ),
                   padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 8.0),
                   child: Text(
-                    selectedSubjectId == null ? "Válassz tantárgyat" : subjects.firstWhere((element) => element.id == selectedSubjectId).name,
+                    selectedSubjectId == null ? "select_subject".i18n : subjects.firstWhere((element) => element.id == selectedSubjectId).name,
                     style: Theme.of(context)
                         .textTheme
                         .titleSmall!
@@ -188,7 +190,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
                     borderRadius: BorderRadius.circular(12.0),
                   ),
                   contentPadding: const EdgeInsets.symmetric(horizontal: 12.0),
-                  hintText: "Módosított név",
+                  hintText: "modified_name".i18n,
                   suffixIcon: IconButton(
                     icon: const Icon(
                       FeatherIcons.x,
@@ -206,18 +208,18 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
           ),
           actions: [
             TextButton(
-              child: const Text(
-                "Mégse",
-                style: TextStyle(fontWeight: FontWeight.w500),
+              child: Text(
+                "cancel".i18n,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               onPressed: () {
                 Navigator.of(context).maybePop();
               },
             ),
             TextButton(
-              child: const Text(
-                "Kész",
-                style: TextStyle(fontWeight: FontWeight.w500),
+              child: Text(
+                "done".i18n,
+                style: const TextStyle(fontWeight: FontWeight.w500),
               ),
               onPressed: () async {
                 if (selectedSubjectId != null) {
@@ -250,7 +252,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
           surfaceTintColor: Theme.of(context).scaffoldBackgroundColor,
           leading: BackButton(color: AppColors.of(context).text),
           title: Text(
-            "Tantárgyak átnevezése",
+            "modify_subjects".i18n,
             style: TextStyle(color: AppColors.of(context).text),
           ),
         ),
@@ -272,7 +274,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
                     padding: const EdgeInsets.symmetric(vertical: 18.0, horizontal: 12.0),
                     child: Center(
                       child: Text(
-                        "Új tárgy átnevezése",
+                        "rename_new_subject".i18n,
                         style: TextStyle(
                           fontWeight: FontWeight.w600,
                           fontSize: 18,
@@ -291,7 +293,7 @@ class _ModifySubjectNamesState extends State<ModifySubjectNames> {
                     if (!snapshot.hasData || snapshot.data!.isEmpty) return Container();
 
                     return Panel(
-                      title: const Text("Átnevezett Tantárgyaid"),
+                      title: Text("renamed_subjects".i18n),
                       child: Column(
                         children: snapshot.data!.keys.map(
                           (key) {
